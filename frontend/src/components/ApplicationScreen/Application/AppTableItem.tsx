@@ -4,6 +4,7 @@ import { BsStar } from "@react-icons/all-files/bs/BsStar";
 import { BsStarFill } from "@react-icons/all-files/bs/BsStarFill";
 import { AppViewContext } from "contexts/AppViewContext";
 import { useColors } from "hooks/useColors";
+import { useRouter } from "next/router";
 import React, { FC, useContext, useState } from "react";
 import { ApplicationIdDto } from "services/backend/nswagts";
 
@@ -14,10 +15,17 @@ const AppTableItem: FC<Props> = ({ application }) => {
   const { hoverBg } = useColors();
   const { currApplication, setCurrApp } = useContext(AppViewContext);
   const [isFavorite, setIsFavorite] = useState(false);
+  const router = useRouter();
 
   return (
     <Tr
-      onClick={() => setCurrApp(application)}
+      onClick={() => {
+        setCurrApp(application);
+        router.replace({
+          pathname: "/ApplicationScreen",
+          query: { id: application.id }
+        });
+      }}
       key={application.id}
       _hover={{
         bgColor: hoverBg

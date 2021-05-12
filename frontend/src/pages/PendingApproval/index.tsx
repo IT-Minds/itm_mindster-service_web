@@ -1,3 +1,5 @@
+import { Center, Container, VStack } from "@chakra-ui/layout";
+import GoogleSearchBar from "components/GoogleUserSearch/GoogleSearchBar";
 import { ApplicationContext } from "contexts/ApplicationContext";
 import { Locale } from "i18n/Locale";
 import { GetStaticProps, NextPage } from "next";
@@ -11,7 +13,6 @@ const PendingApprovalPage: NextPage = () => {
   const [appTokens, setAppTokens] = useState<AppTokenIdDto[]>([]);
   const [currToken, setCurrToken] = useState<AppTokenIdDto>();
 
-  //GetAllAppTokens(true) only returns tokens that have the pending state in them
   const fetchAppTokens = useCallback(async () => {
     try {
       const client = await genApplicationClient();
@@ -40,6 +41,13 @@ const PendingApprovalPage: NextPage = () => {
         fetchServices: null,
         fetchAppTokens: fetchAppTokens
       }}>
+      <Center>
+        <Container pt="30px" pb="15px" w="xl" maxW="unset">
+          <VStack width="full" align="left">
+            <GoogleSearchBar submitUsers={() => null} />
+          </VStack>
+        </Container>
+      </Center>
       {/* <PendingList /> */}
     </ApplicationContext.Provider>
   );

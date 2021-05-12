@@ -8,18 +8,15 @@ import {
   AlertDialogOverlay,
   Box,
   Button,
-  Center,
-  FormControl,
-  FormLabel,
-  Input,
-  InputGroup,
-  InputRightElement,
+  Flex,
+  Spacer,
   Tag,
   useDisclosure
 } from "@chakra-ui/react";
+import GoogleSearchBar from "components/GoogleUserSearch/GoogleSearchBar";
 import React, { FC, useCallback, useEffect, useReducer, useRef, useState } from "react";
 import ListReducer, { ListReducerActionType } from "react-list-reducer";
-import { IActionApproverIdDto } from "services/backend/nswagts";
+import { ActionApproverDto, IActionApproverIdDto, IUser } from "services/backend/nswagts";
 
 type Props = {
   submitCallback: (OwnerMetaDataForm: IActionApproverIdDto[]) => Promise<void>;
@@ -29,7 +26,6 @@ type Props = {
 const ActionApproverForm: FC<Props> = ({ submitCallback, AppMetaData }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [approvers, dispatchApprovers] = useReducer(ListReducer<IActionApproverIdDto>("email"), []);
-  const [newApprover, setNewApprover] = useState<IActionApproverIdDto>();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const cancelRef = useRef<HTMLButtonElement>();
 
@@ -42,16 +38,14 @@ const ActionApproverForm: FC<Props> = ({ submitCallback, AppMetaData }) => {
     }
   }, [AppMetaData]);
 
-  const onSubmit = useCallback(
-    async event => {
-      event.preventDefault();
+  const updateLocalUserList = useCallback(
+    (users: IUser[]) => {
       dispatchApprovers({
-        type: ListReducerActionType.AddOrUpdate,
-        data: newApprover
+        type: ListReducerActionType.Reset,
+        data: users.map(o => new ActionApproverDto({ email: o.primaryEmail }))
       });
-      setNewApprover({ email: "" });
     },
-    [newApprover]
+    [approvers]
   );
   const addApprovers = useCallback(async () => {
     setIsLoading(true);
@@ -61,73 +55,50 @@ const ActionApproverForm: FC<Props> = ({ submitCallback, AppMetaData }) => {
   }, [approvers]);
 
   return (
-    <Box width="full" p={6}>
-      <Box> Add approvers with the Add button and click add Approvers when finished</Box>
-      <Box>
-        {approvers.map(owner => (
-          <Tag m="5px" key={owner.email}>
-            {owner.email}
-          </Tag>
-        ))}
-      </Box>
-      <form onSubmit={onSubmit}>
-        <FormControl isRequired>
-          <FormLabel>Email:</FormLabel>
-          <InputGroup>
-            <Input
-              type="email"
-              value={newApprover?.email ?? ""}
-              placeholder="Write the email of the user you want to add"
-              onChange={event => setNewApprover({ email: event.target.value })}></Input>
-            <InputRightElement>
-              <Button colorScheme="blue" type="submit">
-                Add
-              </Button>
-            </InputRightElement>
-          </InputGroup>
-        </FormControl>
-        <Center>
-          <Button
-            isDisabled={approvers.length == 0}
-            isLoading={isLoading}
-            colorScheme="blue"
-            onClick={onOpen}
-            mt={6}>
-            Add Approvers
-          </Button>
-        </Center>
-        <AlertDialog
-          motionPreset="slideInBottom"
-          leastDestructiveRef={cancelRef}
-          onClose={onClose}
-          isOpen={isOpen}
-          isCentered>
-          <AlertDialogOverlay />
+    <Box width="full">
+      <Flex mb="10px" justify="center" align="center">
+        <Box> Add approvers below by searching for the person and clicking their name</Box>
+        <Spacer />
+        <Button
+          isDisabled={approvers.length == 0}
+          isLoading={isLoading}
+          colorScheme="blue"
+          onClick={onOpen}>
+          Add Approvers
+        </Button>
+      </Flex>
+      <GoogleSearchBar submitUsers={updateLocalUserList} />
+      <AlertDialog
+        motionPreset="slideInBottom"
+        leastDestructiveRef={cancelRef}
+        onClose={onClose}
+        isOpen={isOpen}
+        isCentered>
+        <AlertDialogOverlay />
 
-          <AlertDialogContent>
-            <AlertDialogHeader>Confirm new Approvers</AlertDialogHeader>
-            <AlertDialogCloseButton />
-            <AlertDialogBody>
-              Are you sure you want to add these approvers to your action?
-              <Box>
-                {approvers.map(owner => (
-                  <Tag m="5px" key={owner.email}>
-                    {owner.email}
-                  </Tag>
-                ))}
-              </Box>
-            </AlertDialogBody>
-            <AlertDialogFooter>
-              <Button ref={cancelRef} onClick={onClose}>
-                No
-              </Button>
-              <Button onClick={() => addApprovers()} type="submit" colorScheme="red" ml={3}>
-                Yes
-              </Button>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialog>
-      </form>
+        <AlertDialogContent>
+          <AlertDialogHeader>Confirm new Approvers</AlertDialogHeader>
+          <AlertDialogCloseButton />
+          <AlertDialogBody>
+            Are you sure you want to add these approvers to your action?
+            <Box>
+              {approvers.map(owner => (
+                <Tag m="5px" key={owner.email}>
+                  {owner.email}
+                </Tag>
+              ))}
+            </Box>
+          </AlertDialogBody>
+          <AlertDialogFooter>
+            <Button ref={cancelRef} onClick={onClose}>
+              No
+            </Button>
+            <Button onClick={() => addApprovers()} type="submit" colorScheme="red" ml={3}>
+              Yes
+            </Button>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </Box>
   );
 };
