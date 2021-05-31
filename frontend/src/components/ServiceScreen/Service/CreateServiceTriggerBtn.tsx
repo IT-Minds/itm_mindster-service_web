@@ -14,6 +14,7 @@ import {
 import { BsPlus } from "@react-icons/all-files/bs/BsPlus";
 import MarkdownTwoSplit from "components/Markdown/MarkdownTwoSplit";
 import { ServiceViewContext } from "contexts/ServiceViewContext";
+import { useLocales } from "hooks/useLocales";
 import React, { FC, useCallback, useContext, useState } from "react";
 import { genServiceClient } from "services/backend/apiClients";
 import { CreateServiceCommand, ServiceDto } from "services/backend/nswagts";
@@ -22,6 +23,7 @@ import { convertToIdentifier } from "utils/convertTitleToIdentifier";
 const CreateServiceTriggerBtn: FC = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { setNewCurrService } = useContext(ServiceViewContext);
+  const { t } = useLocales();
   const [value, setValue] = useState("# My Service\n");
   const toast = useToast();
 
@@ -39,14 +41,16 @@ const CreateServiceTriggerBtn: FC = () => {
       );
       setNewCurrService(serviceId);
       toast({
-        description: "Service was added",
+        description: t("toasts.xCreated", { x: t("entityNames.single.service") }),
         status: "success",
         duration: 5000,
         isClosable: true
       });
     } catch (error) {
       toast({
-        description: `PostService responded: ${error}`,
+        description: `${t("toasts.xCreatedE", {
+          x: t("entityNames.single.service")
+        })} ${error}`,
         status: "error",
         duration: 5000,
         isClosable: true
@@ -57,13 +61,13 @@ const CreateServiceTriggerBtn: FC = () => {
   return (
     <>
       <Button rightIcon={<BsPlus />} colorScheme="green" onClick={onOpen}>
-        Create new Service
+        {t("serviceScreen.buttons.createNewService")}
       </Button>
 
       <Modal isOpen={isOpen} onClose={onClose} scrollBehavior="inside" size="full">
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Create a new Service</ModalHeader>
+          <ModalHeader>{t("serviceScreen.buttons.createNewService")}</ModalHeader>
           <ModalCloseButton />
           <Divider />
           <ModalBody>
@@ -72,7 +76,7 @@ const CreateServiceTriggerBtn: FC = () => {
           <Divider />
           <ModalFooter>
             <Button colorScheme="blue" mr={3} onClick={onClose}>
-              Close
+              {t("commonButtons.close")}
             </Button>
           </ModalFooter>
         </ModalContent>

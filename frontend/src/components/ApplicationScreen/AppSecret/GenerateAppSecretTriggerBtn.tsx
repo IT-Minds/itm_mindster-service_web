@@ -12,6 +12,7 @@ import {
   useDisclosure
 } from "@chakra-ui/react";
 import { AppViewContext } from "contexts/AppViewContext";
+import { useLocales } from "hooks/useLocales";
 import React, { FC, useContext, useState } from "react";
 
 import AppSecretResult from "./AppSecretResult";
@@ -20,11 +21,12 @@ const GenerateAppSecretTriggerBtn: FC = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { currApplication, setNewCurrApp } = useContext(AppViewContext);
   const [isLoading, setIsLoading] = useState(false);
+  const { t } = useLocales();
 
   return (
     <Box>
       <Button w="max-content" colorScheme="green" onClick={onOpen}>
-        Generate AppSecret
+        {t("applicationScreen.tokens.appSecret.generateSecret")}
       </Button>
 
       <Modal
@@ -36,7 +38,7 @@ const GenerateAppSecretTriggerBtn: FC = () => {
         size="3xl">
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Are you sure you want to generate your Applications AppSecret?</ModalHeader>
+          <ModalHeader>{t("applicationScreen.modalHeaders.generateAppSecret")}</ModalHeader>
           <ModalCloseButton isDisabled={isLoading} />
           <Divider />
           <ModalBody>
@@ -55,7 +57,7 @@ const GenerateAppSecretTriggerBtn: FC = () => {
           <Divider />
           <ModalFooter>
             <Button isDisabled={isLoading} colorScheme="blue" mr={3} onClick={onClose}>
-              Close
+              {t("commonButtons.close")}
             </Button>
           </ModalFooter>
         </ModalContent>

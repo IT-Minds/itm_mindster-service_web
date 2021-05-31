@@ -12,6 +12,7 @@ import {
 } from "@chakra-ui/react";
 import PopoverMenuButton from "components/Common/PopoverMenuButton";
 import { ServiceViewContext } from "contexts/ServiceViewContext";
+import { useLocales } from "hooks/useLocales";
 import React, { FC, useContext } from "react";
 import { IActionApproverIdDto } from "services/backend/nswagts";
 
@@ -24,15 +25,21 @@ type Props = {
 const ViewActionApproversTriggerBtn: FC<Props> = ({ approvers }) => {
   const { currAction } = useContext(ServiceViewContext);
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const { t } = useLocales();
 
   return (
     <>
-      <PopoverMenuButton btnText={"View approvers"} onClickMethod={onOpen} />
+      <PopoverMenuButton
+        btnText={t("serviceScreen.actions.viewApprovers")}
+        onClickMethod={onOpen}
+      />
 
       <Modal isOpen={isOpen} onClose={onClose} scrollBehavior="inside" size="5xl">
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Action approvers for: {currAction.title}</ModalHeader>
+          <ModalHeader>
+            {t("serviceScreen.actions.viewApproversHeader", { title: currAction.title })}
+          </ModalHeader>
           <ModalCloseButton />
           <Divider />
           <ModalBody>
@@ -41,7 +48,7 @@ const ViewActionApproversTriggerBtn: FC<Props> = ({ approvers }) => {
           <Divider />
           <ModalFooter>
             <Button colorScheme="blue" mr={3} onClick={onClose}>
-              Close
+              {t("commonButtons.close")}
             </Button>
           </ModalFooter>
         </ModalContent>

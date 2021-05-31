@@ -43,14 +43,14 @@ const ServiceLibraryDrawer: FC<Props> = ({ Open, setOpen }) => {
         })
       );
       toast({
-        description: "Review request submitted",
+        description: t("toasts.reviewRequested"),
         status: "success",
         duration: 5000,
         isClosable: true
       });
     } catch (error) {
       toast({
-        description: `UpdateTokenState responded: ${error}`,
+        description: `${t("toasts.reviewRequestedE")} ${error}`,
         status: "error",
         duration: 5000,
         isClosable: true
@@ -72,7 +72,7 @@ const ServiceLibraryDrawer: FC<Props> = ({ Open, setOpen }) => {
             <DrawerContent>
               <DrawerHeader>
                 <Flex>
-                  <Box>ServiceLibrary</Box>
+                  <Box>{t("applicationScreen.modalHeaders.serviceLibrary")}</Box>
                   <Spacer />
                   <CloseButton onClick={() => setOpen(false)} />
                 </Flex>
@@ -84,7 +84,7 @@ const ServiceLibraryDrawer: FC<Props> = ({ Open, setOpen }) => {
                       <Center>
                         <Box mb="5px" maxW="2xl">
                           <CollapsibleInfoBox
-                            text={t("applicationScreen.infoBoxes.BrowseTokenInfo")}
+                            text={t("applicationScreen.tokens.infoBoxes.BrowseTokenInfo")}
                           />
                         </Box>
                       </Center>
@@ -99,7 +99,7 @@ const ServiceLibraryDrawer: FC<Props> = ({ Open, setOpen }) => {
                               submitOnOpen={() => {
                                 return requestReview();
                               }}
-                              buttonText="Request review (Im done browsing services)"
+                              buttonText={t("applicationScreen.tokens.actions.requestReview")}
                               buttonColor="green"
                               submitOnClose={leaveLibraryDrawer}
                             />

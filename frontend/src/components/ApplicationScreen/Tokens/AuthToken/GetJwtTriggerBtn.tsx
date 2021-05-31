@@ -13,6 +13,7 @@ import {
 import JwtForm from "components/Forms/Application/JwtForm";
 import { AppViewContext } from "contexts/AppViewContext";
 import { useButtonSizes } from "hooks/useButtonSizes";
+import { useLocales } from "hooks/useLocales";
 import React, { FC, useContext, useEffect, useState } from "react";
 import { IService2, Service2 } from "services/backend/nswagts";
 type Props = {
@@ -25,6 +26,7 @@ const GetJwtTriggerBtn: FC<Props> = ({ submitOnOpen, buttonColor }) => {
   const { currApplication, currToken, fetchUpdatedToken } = useContext(AppViewContext);
   const [jwtServices, setJwtServices] = useState<IService2[]>([]);
   const { defBtnSize } = useButtonSizes();
+  const { t } = useLocales();
 
   useEffect(() => {
     if (currToken != null) {
@@ -63,13 +65,13 @@ const GetJwtTriggerBtn: FC<Props> = ({ submitOnOpen, buttonColor }) => {
           await submitOnOpen();
           onOpen();
         }}>
-        Generate JWT
+        {t("applicationScreen.tokens.actions.generateJwt")}
       </Button>
 
       <Modal isOpen={isOpen} onClose={onClose} scrollBehavior="inside" size="5xl">
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Get the jwt for your approved token</ModalHeader>
+          <ModalHeader> {t("applicationScreen.modalHeaders.getJwt")}</ModalHeader>
           <ModalCloseButton />
           <Divider />
           <ModalBody>
@@ -88,7 +90,7 @@ const GetJwtTriggerBtn: FC<Props> = ({ submitOnOpen, buttonColor }) => {
           <Divider />
           <ModalFooter>
             <Button colorScheme="blue" mr={3} onClick={onClose}>
-              Close
+              {t("commonButtons.close")}
             </Button>
           </ModalFooter>
         </ModalContent>

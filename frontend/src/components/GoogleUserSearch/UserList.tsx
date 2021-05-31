@@ -1,4 +1,4 @@
-import { Box, Button, Center } from "@chakra-ui/react";
+import { Box, Button, Center, Spinner } from "@chakra-ui/react";
 import { useColors } from "hooks/useColors";
 import React, { FC } from "react";
 import { IUser, User } from "services/backend/nswagts";
@@ -14,26 +14,32 @@ type Props = {
 const UserList: FC<Props> = ({ users, submitCallback, keyword }) => {
   const { hoverBg } = useColors();
 
+  if (users.length == 0) return <Spinner />;
+
   return (
     <Box height="full" width="full" justify="center">
-      {users.slice(0, maxResults).map((user: User) => (
-        <Center p="1px" key={user.primaryEmail}>
-          <Button
-            w="full"
-            rounded="none "
-            fontSize="14px"
-            fontWeight="normal"
-            variant="ghost"
-            _hover={{
-              bgColor: hoverBg
-            }}
-            onClick={() => {
-              submitCallback(user);
-            }}>
-            <UserListItem keyword={keyword} user={user} />
-          </Button>
-        </Center>
-      ))}
+      {users.length == 0 ? (
+        <Spinner />
+      ) : (
+        users.slice(0, maxResults).map((user: User) => (
+          <Center p="1px" key={user.primaryEmail}>
+            <Button
+              w="full"
+              rounded="none "
+              fontSize="14px"
+              fontWeight="normal"
+              variant="ghost"
+              _hover={{
+                bgColor: hoverBg
+              }}
+              onClick={() => {
+                submitCallback(user);
+              }}>
+              <UserListItem keyword={keyword} user={user} />
+            </Button>
+          </Center>
+        ))
+      )}
     </Box>
   );
 };

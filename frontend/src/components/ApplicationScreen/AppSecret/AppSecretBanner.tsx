@@ -1,11 +1,13 @@
 import { Box, Flex, Stack, Text } from "@chakra-ui/react";
 import { useColors } from "hooks/useColors";
+import { useLocales } from "hooks/useLocales";
 import { FC } from "react";
 
 import GenerateAppSecretTriggerBtn from "./GenerateAppSecretTriggerBtn";
 
 const AppSecretBanner: FC = () => {
   const { appSecretBannerBg } = useColors();
+  const { t } = useLocales();
   return (
     <Box w="full" as="section" pb="12">
       <Stack
@@ -18,8 +20,7 @@ const AppSecretBanner: FC = () => {
         bg={appSecretBannerBg}>
         <Flex align="center">
           <Text fontWeight="medium" marginEnd="2">
-            You have not generated your AppSecret for this Application. This is required to generate
-            your AppTokens and JWT
+            {t("applicationScreen.tokens.appSecret.appSecretWarningBar")}
           </Text>
           <GenerateAppSecretTriggerBtn />
         </Flex>

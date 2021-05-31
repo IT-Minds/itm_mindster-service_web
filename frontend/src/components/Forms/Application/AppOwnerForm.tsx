@@ -14,6 +14,7 @@ import {
   useDisclosure
 } from "@chakra-ui/react";
 import GoogleSearchBar from "components/GoogleUserSearch/GoogleSearchBar";
+import { useLocales } from "hooks/useLocales";
 import React, { FC, useCallback, useEffect, useReducer, useRef, useState } from "react";
 import ListReducer, { ListReducerActionType } from "react-list-reducer";
 import { ApplicationOwnerDto, IApplicationOwnerDto, IUser } from "services/backend/nswagts";
@@ -28,6 +29,7 @@ const AppOwnerForm: FC<Props> = ({ submitCallback, AppMetaData }) => {
   const [appOwners, dispatchAppOwners] = useReducer(ListReducer<IApplicationOwnerDto>("email"), []);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const cancelRef = useRef<HTMLButtonElement>();
+  const { t } = useLocales();
 
   useEffect(() => {
     if (AppMetaData) {
@@ -57,14 +59,14 @@ const AppOwnerForm: FC<Props> = ({ submitCallback, AppMetaData }) => {
   return (
     <Box width="full">
       <Flex mb="10px" justify="center" align="center">
-        <Box> Add owners below by searching for the person and clicking their name</Box>
+        <Box>{t("googleSearch.addOwnerText")}</Box>
         <Spacer />
         <Button
           isDisabled={appOwners.length == 0}
           isLoading={isLoading}
           colorScheme="blue"
           onClick={onOpen}>
-          Add owners
+          {t("googleSearch.addOwner")}
         </Button>
       </Flex>
       <GoogleSearchBar submitUsers={updateLocalUserList} />
@@ -77,10 +79,10 @@ const AppOwnerForm: FC<Props> = ({ submitCallback, AppMetaData }) => {
         <AlertDialogOverlay />
 
         <AlertDialogContent>
-          <AlertDialogHeader>Confirm new owners</AlertDialogHeader>
+          <AlertDialogHeader>{t("alerts.appOwners.header")}</AlertDialogHeader>
           <AlertDialogCloseButton />
           <AlertDialogBody>
-            Are you sure you want to add these users to your application?
+            {t("alerts.appOwners.text")}
             <Box>
               {appOwners.map(owner => (
                 <Tag m="5px" key={owner.email}>
@@ -91,10 +93,10 @@ const AppOwnerForm: FC<Props> = ({ submitCallback, AppMetaData }) => {
           </AlertDialogBody>
           <AlertDialogFooter>
             <Button ref={cancelRef} onClick={onClose}>
-              No
+              {t("commonButtons.no")}
             </Button>
             <Button onClick={() => addOwners()} type="submit" colorScheme="red" ml={3}>
-              Yes
+              {t("commonButtons.yes")}
             </Button>
           </AlertDialogFooter>
         </AlertDialogContent>

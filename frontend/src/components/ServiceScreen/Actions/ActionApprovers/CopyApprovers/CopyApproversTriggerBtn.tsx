@@ -13,6 +13,7 @@ import {
 } from "@chakra-ui/react";
 import PopoverMenuButton from "components/Common/PopoverMenuButton";
 import { ServiceViewContext } from "contexts/ServiceViewContext";
+import { useLocales } from "hooks/useLocales";
 import React, { FC, useCallback, useContext } from "react";
 import { IActionApproverDto } from "services/backend/nswagts";
 
@@ -26,7 +27,7 @@ type Props = {
 const CopyApproverTriggerBtn: FC<Props> = ({ approversToCopy, submitCallback }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { currService, currAction } = useContext(ServiceViewContext);
-
+  const { t } = useLocales();
   const handleSubmit = useCallback(
     async (actionIds: number[]) => {
       actionIds.forEach(async actionId => {
@@ -39,12 +40,17 @@ const CopyApproverTriggerBtn: FC<Props> = ({ approversToCopy, submitCallback }) 
 
   return (
     <>
-      <PopoverMenuButton btnText={"Copy approvers to another action"} onClickMethod={onOpen} />
+      <PopoverMenuButton
+        btnText={t("serviceScreen.actions.copyApproversToAnotherAction")}
+        onClickMethod={onOpen}
+      />
 
       <Modal isOpen={isOpen} onClose={onClose} scrollBehavior="inside" size="5xl">
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Copy the following approvers from: {currAction.title}</ModalHeader>
+          <ModalHeader>
+            {t("serviceScreen.actions.copyApproversHeader", { title: currAction.title })}
+          </ModalHeader>
           <ModalCloseButton />
           <Divider />
           <ModalBody>
@@ -59,7 +65,7 @@ const CopyApproverTriggerBtn: FC<Props> = ({ approversToCopy, submitCallback }) 
           <Divider />
           <ModalFooter>
             <Button colorScheme="blue" mr={3} onClick={onClose}>
-              Close
+              {t("commonButtons.close")}
             </Button>
           </ModalFooter>
         </ModalContent>

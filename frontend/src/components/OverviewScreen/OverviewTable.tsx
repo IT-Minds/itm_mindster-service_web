@@ -1,4 +1,5 @@
 import { Box, Heading, Table, Tbody, Th, Thead, Tr } from "@chakra-ui/react";
+import { useLocales } from "hooks/useLocales";
 import { FC } from "react";
 import {
   AppOverviewDto,
@@ -14,6 +15,7 @@ type Props = {
   tableHeading: string;
 };
 const OverviewTable: FC<Props> = ({ tableData, tableHeading }) => {
+  const { t } = useLocales();
   return (
     <Box>
       <Heading mb="10" size="h3">
@@ -23,8 +25,8 @@ const OverviewTable: FC<Props> = ({ tableData, tableHeading }) => {
       <Table size="sm" variant="simple">
         <Thead>
           <Tr>
-            <Th w={0.4}>Name</Th>
-            <Th w={0.6}>Identifier</Th>
+            <Th w={0.4}>{t("entityVariables.name")}</Th>
+            <Th w={0.6}>{t("entityVariables.identifier")}</Th>
           </Tr>
         </Thead>
         <Tbody>

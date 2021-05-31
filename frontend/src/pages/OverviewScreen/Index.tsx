@@ -3,6 +3,7 @@ import { Box, Center, Container, Flex, Heading, SimpleGrid, Text } from "@chakra
 import OverviewHeader from "components/OverviewScreen/OverviewHeader";
 import OverviewTable from "components/OverviewScreen/OverviewTable";
 import { OverviewScreenContext } from "contexts/OverviewScreenContext";
+import { useLocales } from "hooks/useLocales";
 import { Locale } from "i18n/Locale";
 import { GetStaticProps, NextPage } from "next";
 import Link from "next/link";
@@ -16,6 +17,7 @@ import { logger } from "utils/logger";
 const OverviewScreen: NextPage = () => {
   const [applications, dispatchApplications] = useReducer(ListReducer<IAppOverviewDto>("id"), []);
   const [services, dispatchServices] = useReducer(ListReducer<IServiceOverviewDto>("id"), []);
+  const { t } = useLocales();
 
   const fetchApps = useCallback(async () => {
     try {
@@ -75,7 +77,10 @@ const OverviewScreen: NextPage = () => {
               spacingY="20px">
               {applications.length != 0 ? (
                 <Box>
-                  <OverviewTable tableData={applications} tableHeading="Applications" />
+                  <OverviewTable
+                    tableData={applications}
+                    tableHeading={t("entityNames.plural.applications")}
+                  />
                 </Box>
               ) : (
                 <Flex direction="column">
@@ -94,7 +99,10 @@ const OverviewScreen: NextPage = () => {
               )}
               {services.length != 0 ? (
                 <Box>
-                  <OverviewTable tableData={services} tableHeading="Services" />
+                  <OverviewTable
+                    tableData={services}
+                    tableHeading={t("entityNames.plural.services")}
+                  />
                 </Box>
               ) : (
                 <Flex direction="column">

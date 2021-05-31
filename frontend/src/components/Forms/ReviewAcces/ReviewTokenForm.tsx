@@ -1,5 +1,6 @@
 import { Box, Button, Center, Heading, useToast, VStack } from "@chakra-ui/react";
 import { ServiceViewContext } from "contexts/ServiceViewContext";
+import { useLocales } from "hooks/useLocales";
 import React, { FC, useCallback, useContext, useState } from "react";
 import { genApplicationClient } from "services/backend/apiClients";
 import {
@@ -19,6 +20,7 @@ const ReviewTokenForm: FC<Props> = ({ token }) => {
   const { fetchPendingTokens } = useContext(ServiceViewContext);
   const [isLoading, setIsLoading] = useState(false);
   const toast = useToast();
+  const { t } = useLocales();
   const [actions, setActions] = useState<AppTokenActionUpdateDto[]>(() =>
     token.appTokenActions.map(
       action =>
@@ -45,14 +47,14 @@ const ReviewTokenForm: FC<Props> = ({ token }) => {
           })
         );
         toast({
-          description: "Submission was received",
+          description: t("toasts.submitted"),
           status: "success",
           duration: 5000,
           isClosable: true
         });
       } catch (error) {
         toast({
-          description: `UpdateAppToken responded: ${error}`,
+          description: `${t("toast.submittedE")} ${error}`,
           status: "error",
           duration: 5000,
           isClosable: true
@@ -83,7 +85,9 @@ const ReviewTokenForm: FC<Props> = ({ token }) => {
           <form onSubmit={() => handleSubmit(event)}>
             {token.appTokenActions.map((tokenAction: AppTokenActionIdDto) => (
               <Box key={tokenAction.id} m="4" p="2" borderWidth="1px" borderRadius="lg">
-                <Heading size="h4">{`Action: ${tokenAction.action.actionIdentifier}`}</Heading>
+                <Heading size="h4">
+                  {`${t("entityNames.single.action")}: ${tokenAction.action.actionIdentifier}`}
+                </Heading>
                 <ReviewTokenFormItem
                   submitCallback={updateAction}
                   index={token.appTokenActions.indexOf(tokenAction)}
@@ -93,8 +97,8 @@ const ReviewTokenForm: FC<Props> = ({ token }) => {
               </Box>
             ))}
             <Box ml="10" mb="5">
-              <Button isLoading={isLoading} size="lg" colorScheme="blue" mt={6} type="submit">
-                Submit
+              <Button isLoading={isLoading} colorScheme="blue" mt={6} type="submit">
+                {t("commonButtons.submit")}
               </Button>
             </Box>
           </form>

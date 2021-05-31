@@ -57,7 +57,10 @@ const JwtForm: FC<Props> = ({ aid, submitCallback, services, tokenIdentifier }) 
       onOpen();
     } catch (error) {
       toast({
-        description: `CreateJwt responded: ${error}`,
+        description: `${t("toasts.xCreatedE", {
+          x: "JWT"
+        })} ${error}`,
+
         status: "error",
         duration: 5000,
         isClosable: true
@@ -80,19 +83,19 @@ const JwtForm: FC<Props> = ({ aid, submitCallback, services, tokenIdentifier }) 
         <form onSubmit={onSubmit}>
           <FormControl isRequired>
             <Box>
-              <CollapsibleInfoBox text={t("applicationScreen.infoBoxes.GenerateJwtInfo")} />
+              <CollapsibleInfoBox text={t("applicationScreen.tokens.infoBoxes.GenerateJwtInfo")} />
             </Box>
             <FormLabel>App secret:</FormLabel>
             <Textarea
               type="text"
               value={appSecret}
-              placeholder="You received this once when you created your application"
+              placeholder={t("applicationScreen.tokens.appSecret.appSecretPlaceholder")}
               onChange={event => setAppSecret(event.target.value)}
             />
           </FormControl>
           <Center>
             <Button isLoading={isLoading} colorScheme="blue" mt={6} type="submit">
-              Submit
+              {t("applicationScreen.tokens.actions.generateJwt")}
             </Button>
           </Center>
         </form>
@@ -107,7 +110,9 @@ const JwtForm: FC<Props> = ({ aid, submitCallback, services, tokenIdentifier }) 
         size="5xl">
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Here is your JWT for: {aid}</ModalHeader>
+          <ModalHeader>
+            {t("applicationScreen.modalHeaders.hereIsYourAppSecret")} {aid}
+          </ModalHeader>
           <ModalCloseButton />
           <Divider />
           <ModalBody>
@@ -116,7 +121,7 @@ const JwtForm: FC<Props> = ({ aid, submitCallback, services, tokenIdentifier }) 
           <Divider />
           <ModalFooter>
             <Button colorScheme="blue" onClick={onCopy} mr={2}>
-              {hasCopied ? "Copied" : "Copy"}
+              {hasCopied ? t("commonButtons.copied") : t("commonButtons.copy")}
             </Button>
             <Button
               colorScheme="red"
@@ -125,7 +130,7 @@ const JwtForm: FC<Props> = ({ aid, submitCallback, services, tokenIdentifier }) 
                 onClose();
                 submitCallback();
               }}>
-              Close
+              {t("commonButtons.close")}
             </Button>
           </ModalFooter>
         </ModalContent>

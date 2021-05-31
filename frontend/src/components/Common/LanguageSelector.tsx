@@ -54,36 +54,37 @@ const LanguageSelector: FC = () => {
         <PopoverCloseButton />
         <PopoverBody marginTop={4}>
           <VStack align="flex-end ">
-            {Object.entries(localeNameMap)?.map(loc => (
-              <Link
-                href={{
-                  pathname: route,
-                  query
-                }}
-                locale={loc[0]}
-                key={loc[0]}
-                passHref>
-                <HStack
-                  cursor="pointer"
-                  _hover={{
-                    background: hoverBg
+            {localeNameMap &&
+              Object.entries(localeNameMap)?.map(loc => (
+                <Link
+                  href={{
+                    pathname: route,
+                    query
                   }}
-                  padding={1}
-                  spacing={1}
-                  borderRadius={10}>
-                  <Text>{loc[1]}</Text>
-                  <Image
-                    src={"/images/locales/" + loc + ".png"}
-                    alt="My Profile Picture"
-                    width={8}
-                    height={8}
-                    quality={90}
-                    objectFit="contain"
-                    borderRadius="full"
-                  />
-                </HStack>
-              </Link>
-            ))}
+                  locale={loc[0]}
+                  key={loc[0]}
+                  passHref>
+                  <HStack
+                    cursor="pointer"
+                    _hover={{
+                      background: hoverBg
+                    }}
+                    padding={1}
+                    spacing={1}
+                    borderRadius={10}>
+                    <Text>{loc[1]}</Text>
+                    <Image
+                      src={"/images/locales/" + loc[0] + ".png"}
+                      alt=""
+                      width={8}
+                      height={8}
+                      quality={90}
+                      objectFit="contain"
+                      borderRadius="full"
+                    />
+                  </HStack>
+                </Link>
+              ))}
           </VStack>
         </PopoverBody>
       </PopoverContent>

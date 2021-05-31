@@ -86,7 +86,7 @@ const SeeTokenStatusDrawer: FC<Props> = ({
               <Flex>
                 {currToken != null && (
                   <Box>
-                    Status of {currToken.id} {currToken.description}
+                    {t("applicationScreen.modalHeaders.tokenStatus")} {currToken.tokenIdentifier}
                   </Box>
                 )}
                 <Spacer />
@@ -103,7 +103,7 @@ const SeeTokenStatusDrawer: FC<Props> = ({
                 <Container h="full" w="5xl" maxW="unset">
                   <Flex direction="column" height="full" width="full" align="left">
                     <CollapsibleInfoBox
-                      text={t("applicationScreen.infoBoxes.SeeTokenStatusInfo")}
+                      text={t("applicationScreen.tokens.infoBoxes.SeeTokenStatusInfo")}
                     />
                     <TokenStatusList />
                     <Center hidden={!isAllApproved} m="5">

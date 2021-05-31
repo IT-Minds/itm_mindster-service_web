@@ -15,6 +15,7 @@ import {
   useDisclosure,
   useToast
 } from "@chakra-ui/react";
+import { useLocales } from "hooks/useLocales";
 import React, { FC, useCallback, useState } from "react";
 import { genApplicationClient } from "services/backend/apiClients";
 import { CreateAppSecretCommand } from "services/backend/nswagts";
@@ -31,6 +32,7 @@ const AppSecretResult: FC<Props> = ({ submitCallback, currAppId, isLoading, setI
   const [appSecret, setAppSecret] = useState("");
   const { hasCopied, onCopy } = useClipboard(appSecret);
   const toast = useToast();
+  const { t } = useLocales();
 
   const generateAppSecret = useCallback(async () => {
     setIsLoading(true);
@@ -44,7 +46,7 @@ const AppSecretResult: FC<Props> = ({ submitCallback, currAppId, isLoading, setI
       onOpen();
     } catch (error) {
       toast({
-        description: `GenerateAppSecret responded: ${error}`,
+        description: `${t("toasts.error")} ${error}`,
         status: "error",
         duration: 5000,
         isClosable: true
@@ -57,16 +59,13 @@ const AppSecretResult: FC<Props> = ({ submitCallback, currAppId, isLoading, setI
   return (
     <Center>
       <Box width="full" p={6}>
-        <Text>
-          This can only be done once and you are responsible for keeping it safe and secure. The
-          AppSecret is used for signing your AppTokens in order to generate a JWT.
-        </Text>
+        <Text>{t("applicationScreen.tokens.appSecret.appSecretWarning")}</Text>
         <Button
           isLoading={isLoading}
           onClick={() => generateAppSecret()}
           colorScheme="green"
           mt="10px">
-          Generate AppSecret
+          {t("applicationScreen.tokens.appSecret.generateSecret")}
         </Button>
       </Box>
       <Modal
@@ -81,7 +80,7 @@ const AppSecretResult: FC<Props> = ({ submitCallback, currAppId, isLoading, setI
         size="2xl">
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Here is your AppSecret</ModalHeader>
+          <ModalHeader>{t("applicationScreen.modalHeaders.hereIsYourAppSecret")}</ModalHeader>
           <ModalCloseButton />
           <Divider />
           <ModalBody>
@@ -90,7 +89,7 @@ const AppSecretResult: FC<Props> = ({ submitCallback, currAppId, isLoading, setI
           <Divider />
           <ModalFooter>
             <Button colorScheme="blue" onClick={onCopy} mr={2}>
-              {hasCopied ? "Copied" : "Copy"}
+              {hasCopied ? t("commonButtons.copied") : t("commonButtons.copy")}
             </Button>
             <Button
               colorScheme="red"
@@ -99,7 +98,7 @@ const AppSecretResult: FC<Props> = ({ submitCallback, currAppId, isLoading, setI
                 onClose();
                 submitCallback();
               }}>
-              Close
+              {t("commonButtons.close")}
             </Button>
           </ModalFooter>
         </ModalContent>

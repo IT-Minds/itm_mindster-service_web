@@ -13,6 +13,7 @@ import {
 } from "@chakra-ui/react";
 import { BsPlus } from "@react-icons/all-files/bs/BsPlus";
 import { AppViewContext } from "contexts/AppViewContext";
+import { useLocales } from "hooks/useLocales";
 import React, { FC, useCallback, useContext } from "react";
 import { genApplicationClient } from "services/backend/apiClients";
 import { ApplicationOwnerDto, CreateApplicationOwnerCommand } from "services/backend/nswagts";
@@ -23,6 +24,7 @@ const AddOwnersTriggerBtn: FC = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { fetchAppOwners, currApplication } = useContext(AppViewContext);
   const toast = useToast();
+  const { t } = useLocales();
 
   const addOwners = useCallback(
     async (form: ApplicationOwnerDto[]) => {
@@ -35,14 +37,17 @@ const AddOwnersTriggerBtn: FC = () => {
           })
         );
         toast({
-          description: "Owners were added",
+          description: t("toasts.xAdded", { x: t("entityNames.plural.owners") }),
           status: "success",
           duration: 5000,
           isClosable: true
         });
       } catch (error) {
         toast({
-          description: `PostAppOwners responded: ${error}`,
+          description: `${t("toasts.xAddedE", {
+            x: t("entityNames.plural.owners")
+          })} ${error}`,
+
           status: "error",
           duration: 5000,
           isClosable: true
@@ -58,13 +63,15 @@ const AddOwnersTriggerBtn: FC = () => {
   return (
     <>
       <Button onClick={onOpen} rightIcon={<BsPlus />} colorScheme="green">
-        Add owners
+        {t("applicationScreen.buttons.addOwners")}
       </Button>
 
       <Modal isOpen={isOpen} onClose={onClose} scrollBehavior="inside" size="5xl">
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Add owners to: {currApplication.title}</ModalHeader>
+          <ModalHeader>
+            {t("applicationScreen.modalHeaders.addOwners", { application: currApplication.title })}
+          </ModalHeader>
           <ModalCloseButton />
           <Divider />
           <ModalBody>
@@ -73,7 +80,7 @@ const AddOwnersTriggerBtn: FC = () => {
           <Divider />
           <ModalFooter>
             <Button colorScheme="blue" mr={3} onClick={onClose}>
-              Close
+              {t("commonButtons.close")}
             </Button>
           </ModalFooter>
         </ModalContent>

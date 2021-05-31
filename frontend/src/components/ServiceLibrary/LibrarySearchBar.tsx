@@ -1,12 +1,13 @@
 import { SearchIcon } from "@chakra-ui/icons";
 import { Input, InputGroup, InputLeftElement } from "@chakra-ui/input";
-import React, { FC, useState } from "react";
+import { useLocales } from "hooks/useLocales";
+import React, { FC } from "react";
 type Props = {
   keyword: string;
   setKeyword: React.Dispatch<React.SetStateAction<string>>;
 };
 const LibrarySearchBar: FC<Props> = ({ keyword, setKeyword }) => {
-  useState();
+  const { t } = useLocales();
 
   return (
     <InputGroup>
@@ -17,7 +18,7 @@ const LibrarySearchBar: FC<Props> = ({ keyword, setKeyword }) => {
         w="full"
         borderRadius="full"
         value={keyword}
-        placeholder={"search for service"}
+        placeholder={t("applicationScreen.serviceLibrary.searchForService")}
         onChange={e => setKeyword(e.target.value)}
       />
     </InputGroup>

@@ -14,6 +14,7 @@ import {
   useDisclosure
 } from "@chakra-ui/react";
 import GoogleSearchBar from "components/GoogleUserSearch/GoogleSearchBar";
+import { useLocales } from "hooks/useLocales";
 import React, { FC, useCallback, useEffect, useReducer, useRef, useState } from "react";
 import ListReducer, { ListReducerActionType } from "react-list-reducer";
 import { IServiceOwnerDto, IUser, ServiceOwnerDto } from "services/backend/nswagts";
@@ -24,6 +25,7 @@ type Props = {
 };
 
 const ServiceOwnerForm: FC<Props> = ({ submitCallback, AppMetaData }) => {
+  const { t } = useLocales();
   const [isLoading, setIsLoading] = useState(false);
   const [serviceOwners, dispatchServiceOwners] = useReducer(
     ListReducer<IServiceOwnerDto>("email"),
@@ -60,14 +62,14 @@ const ServiceOwnerForm: FC<Props> = ({ submitCallback, AppMetaData }) => {
   return (
     <Box width="full">
       <Flex mb="10px" align="center">
-        <Box> Add owners below by searching for the person and clicking their name</Box>
+        <Box>{t("googleSearch.addOwnerText")}</Box>
         <Spacer />
         <Button
           isDisabled={serviceOwners.length == 0}
           isLoading={isLoading}
           colorScheme="blue"
           onClick={onOpen}>
-          Add owners
+          {t("googleSearch.addOwner")}
         </Button>
       </Flex>
       <GoogleSearchBar submitUsers={updateLocalUserList} />
@@ -81,10 +83,10 @@ const ServiceOwnerForm: FC<Props> = ({ submitCallback, AppMetaData }) => {
         <AlertDialogOverlay />
 
         <AlertDialogContent>
-          <AlertDialogHeader>Confirm new owners</AlertDialogHeader>
+          <AlertDialogHeader>{t("alerts.serviceOwners.header")}</AlertDialogHeader>
           <AlertDialogCloseButton />
           <AlertDialogBody>
-            Are you sure you want to add these users to your service?
+            {t("alerts.serviceOwners.text")}
             <Box>
               {serviceOwners.map(owner => (
                 <Tag m="5px" key={owner.email}>
@@ -95,10 +97,10 @@ const ServiceOwnerForm: FC<Props> = ({ submitCallback, AppMetaData }) => {
           </AlertDialogBody>
           <AlertDialogFooter>
             <Button ref={cancelRef} onClick={onClose}>
-              No
+              {t("commonButtons.no")}
             </Button>
             <Button onClick={() => addOwners()} type="submit" colorScheme="red" ml={3}>
-              Yes
+              {t("commonButtons.yes")}
             </Button>
           </AlertDialogFooter>
         </AlertDialogContent>

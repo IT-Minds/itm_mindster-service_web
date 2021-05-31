@@ -1,5 +1,6 @@
 import { Flex, Spacer } from "@chakra-ui/react";
 import ColorModeToggler from "components/Common/ColorModeToggler";
+import LanguageSelector from "components/Common/LanguageSelector";
 import MLogo from "components/Common/MLogo";
 import { useColors } from "hooks/useColors";
 import { FC } from "react";
@@ -17,6 +18,7 @@ const OverviewHeader: FC = () => {
       width="full">
       <MLogo />
       <Spacer />
+      <LanguageSelector />
       <ColorModeToggler />
     </Flex>
   );

@@ -13,10 +13,12 @@ import {
 import NotificationBellWithCounter from "components/Common/NotificationBellWithCounter";
 import PendingList from "components/ServiceScreen/PendingApprovals/PendingList";
 import { ServiceViewContext } from "contexts/ServiceViewContext";
+import { useLocales } from "hooks/useLocales";
 import React, { FC, useContext } from "react";
 const NotificationTriggerBtn: FC = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { pendingTokens } = useContext(ServiceViewContext);
+  const { t } = useLocales();
 
   return (
     <>
@@ -24,7 +26,7 @@ const NotificationTriggerBtn: FC = () => {
       <Modal isOpen={isOpen} onClose={onClose} scrollBehavior="inside" size="4xl">
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Pending actions </ModalHeader>
+          <ModalHeader>{t("serviceScreen.pendingTokens.header")}</ModalHeader>
           <ModalCloseButton />
           <Divider />
           <ModalBody>
@@ -33,7 +35,7 @@ const NotificationTriggerBtn: FC = () => {
           <Divider />
           <ModalFooter>
             <Button colorScheme="blue" mr={3} onClick={onClose}>
-              Close
+              {t("commonButtons.close")}
             </Button>
           </ModalFooter>
         </ModalContent>

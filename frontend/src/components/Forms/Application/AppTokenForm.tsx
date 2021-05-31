@@ -10,6 +10,7 @@ import {
   Textarea,
   Wrap
 } from "@chakra-ui/react";
+import { useLocales } from "hooks/useLocales";
 import React, { FC, useCallback, useEffect, useState } from "react";
 import { AppTokenCreateDto, IAppTokenCreateDto } from "services/backend/nswagts";
 import { convertToIdentifier } from "utils/convertTitleToIdentifier";
@@ -23,6 +24,7 @@ const AppTokenForm: FC<Props> = ({ submitCallback }) => {
   const [description, setDescription] = useState("");
   const [identifier, setIdentifier] = useState("");
   const [title, setTitle] = useState("");
+  const { t } = useLocales();
 
   const handleSubmit = useCallback(
     async event => {
@@ -40,7 +42,7 @@ const AppTokenForm: FC<Props> = ({ submitCallback }) => {
     if (title) {
       const timeOutId = setTimeout(() => setIdentifier(convertToIdentifier(title)), 700);
       return () => clearTimeout(timeOutId);
-    }
+    } else setIdentifier("");
   }, [title]);
 
   return (
@@ -48,29 +50,30 @@ const AppTokenForm: FC<Props> = ({ submitCallback }) => {
       <Wrap width="full" justify="center">
         <Flex width="full" align="center" justifyContent="center">
           <Box width="full">
-            <Heading fontSize="sm">Identifier: </Heading>
+            <Heading fontSize="sm">{t("entityVariables.identifier")}: </Heading>
             {identifier}
             <form onSubmit={() => handleSubmit(event)}>
               <FormControl mt="6" isRequired>
-                <FormLabel>Name:</FormLabel>
+                <FormLabel>{t("entityVariables.name")}:</FormLabel>
                 <Input
                   type="text"
-                  placeholder="Token Identifier"
+                  placeholder={`${t("entityNames.single.token")} ${t(
+                    "entityVariables.identifier"
+                  )}`}
                   value={title}
                   onChange={event => setTitle(event.target.value)}
                 />
               </FormControl>
               <FormControl mt="6" isRequired>
-                <FormLabel>Description:</FormLabel>
+                <FormLabel>{t("entityVariables.description")}:</FormLabel>
                 <Textarea
-                  placeholder="Scope of the AppToken"
                   value={description}
                   onChange={event => setDescription(event.target.value)}
                 />
               </FormControl>
               <Center>
                 <Button isLoading={isLoading} colorScheme="blue" type="submit" mt={6}>
-                  Submit
+                  {t("commonButtons.submit")}
                 </Button>
               </Center>
             </form>

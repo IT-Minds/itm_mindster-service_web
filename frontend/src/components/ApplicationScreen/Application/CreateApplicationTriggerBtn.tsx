@@ -14,6 +14,7 @@ import {
 import { BsPlus } from "@react-icons/all-files/bs/BsPlus";
 import MarkdownTwoSplit from "components/Markdown/MarkdownTwoSplit";
 import { AppViewContext } from "contexts/AppViewContext";
+import { useLocales } from "hooks/useLocales";
 import React, { FC, useCallback, useContext, useState } from "react";
 import { genApplicationClient } from "services/backend/apiClients";
 import { ApplicationDto, CreateApplicationCommand } from "services/backend/nswagts";
@@ -24,6 +25,7 @@ const CreateApplicationTriggerBtn: FC = () => {
   const { setNewCurrApp } = useContext(AppViewContext);
   const [value, setValue] = useState("# My Application\n");
   const toast = useToast();
+  const { t } = useLocales();
 
   const addApplication = useCallback(async (title: string, description: string) => {
     const applicationClient = await genApplicationClient();
@@ -39,14 +41,16 @@ const CreateApplicationTriggerBtn: FC = () => {
       );
       setNewCurrApp(appId);
       toast({
-        description: `Application created`,
+        description: t("toasts.xCreated", { x: t("entityNames.single.application") }),
         status: "success",
         duration: 5000,
         isClosable: true
       });
     } catch (error) {
       toast({
-        description: `PostApplication responded: ${error}`,
+        description: `${t("toasts.xCreatedE", {
+          x: t("entityNames.single.application")
+        })} ${error}`,
         status: "error",
         duration: 5000,
         isClosable: true
@@ -57,13 +61,13 @@ const CreateApplicationTriggerBtn: FC = () => {
   return (
     <>
       <Button rightIcon={<BsPlus />} colorScheme="green" onClick={onOpen}>
-        Create new project
+        {t("applicationScreen.buttons.createApp")}
       </Button>
 
       <Modal isOpen={isOpen} onClose={onClose} scrollBehavior="inside" size="full">
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Create a new application</ModalHeader>
+          <ModalHeader> {t("applicationScreen.buttons.createApp")}</ModalHeader>
           <ModalCloseButton />
           <Divider />
           <ModalBody>
@@ -77,7 +81,7 @@ const CreateApplicationTriggerBtn: FC = () => {
           <Divider />
           <ModalFooter>
             <Button colorScheme="blue" mr={3} onClick={onClose}>
-              Close
+              {t("commonButtons.close")}
             </Button>
           </ModalFooter>
         </ModalContent>

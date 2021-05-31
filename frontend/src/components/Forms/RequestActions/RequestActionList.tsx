@@ -11,6 +11,7 @@ import {
   VStack
 } from "@chakra-ui/react";
 import { AppViewContext } from "contexts/AppViewContext";
+import { useLocales } from "hooks/useLocales";
 import React, { FC, useCallback, useContext, useEffect, useState } from "react";
 import { genApplicationClient } from "services/backend/apiClients";
 import { ActionIdDto, CreateAppTokenActionsCommand, IServiceIdDto } from "services/backend/nswagts";
@@ -40,6 +41,7 @@ const RequestActionList: FC<ActionTableProps> = ({
   );
   const { currToken, fetchUpdatedToken } = useContext(AppViewContext);
   const toast = useToast();
+  const { t } = useLocales();
 
   useEffect(() => {
     setCheckboxes(
@@ -101,7 +103,8 @@ const RequestActionList: FC<ActionTableProps> = ({
         })
       );
       toast({
-        description: "Access was requested",
+        description: t("toasts.accessRequested"),
+
         status: "success",
         duration: 5000,
         isClosable: true
@@ -110,7 +113,8 @@ const RequestActionList: FC<ActionTableProps> = ({
       submitCallBack();
     } catch (error) {
       toast({
-        description: `PutAppToken responded: ${error}`,
+        description: `${t("toasts.accessRequestedE")} ${error}`,
+
         status: "error",
         duration: 5000,
         isClosable: true
@@ -134,8 +138,8 @@ const RequestActionList: FC<ActionTableProps> = ({
                     colorScheme="green"
                   />
                 </Th>
-                <Th>Id</Th>
-                <Th w={0.7}>Description</Th>
+                <Th>{t("entityVariables.identifier")}</Th>
+                <Th w={0.7}>{t("entityVariables.description")}</Th>
               </Tr>
             </Thead>
             <Tbody>
@@ -155,13 +159,13 @@ const RequestActionList: FC<ActionTableProps> = ({
               colorScheme="blue"
               mt={6}
               type="submit">
-              Request actions
+              {t("applicationScreen.serviceLibrary.requestAccess")}
             </Button>
           </Box>
         </VStack>
       ) : (
         <Box w="full" justifyContent="center">
-          No Actions in this Service yet
+          {t("applicationScreen.serviceLibrary.noActions")}
         </Box>
       )}
     </Box>

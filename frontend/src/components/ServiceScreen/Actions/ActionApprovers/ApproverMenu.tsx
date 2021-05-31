@@ -11,6 +11,7 @@ import {
 import { BsChevronDown } from "@react-icons/all-files/bs/BsChevronDown";
 import { ServiceViewContext } from "contexts/ServiceViewContext";
 import { useButtonSizes } from "hooks/useButtonSizes";
+import { useLocales } from "hooks/useLocales";
 import React, { FC, useCallback, useContext, useState } from "react";
 import { genServiceClient } from "services/backend/apiClients";
 import {
@@ -28,6 +29,7 @@ type Props = {
 };
 const ApproverMenu: FC<Props> = ({ action }) => {
   const [isOpen, setOpen] = useState(false);
+  const { t } = useLocales();
   const { approvers, fetchActionApprovers, currAction, setCurrAction } = useContext(
     ServiceViewContext
   );
@@ -43,14 +45,16 @@ const ApproverMenu: FC<Props> = ({ action }) => {
         })
       );
       toast({
-        description: "Approvers were added",
+        description: t("toasts.xAdded", { x: t("entityNames.plural.approvers") }),
         status: "success",
         duration: 5000,
         isClosable: true
       });
     } catch (error) {
       toast({
-        description: `PostApprovers responded: ${error}`,
+        description: `${t("toasts.xAddedE", {
+          x: t("entityNames.plural.approvers")
+        })} ${error}`,
         status: "error",
         duration: 5000,
         isClosable: true
@@ -72,7 +76,7 @@ const ApproverMenu: FC<Props> = ({ action }) => {
             setCurrAction(action);
             setOpen(!isOpen);
           }}>
-          Actions
+          {t("entityVariables.actions")}
         </Button>
       </PopoverTrigger>
       <PopoverContent minWidth="200" padding="0" boxSize="min-content" margin="0">

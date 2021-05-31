@@ -21,6 +21,7 @@ import {
 } from "@chakra-ui/react";
 import { BsChevronDown } from "@react-icons/all-files/bs/BsChevronDown";
 import { AppViewContext } from "contexts/AppViewContext";
+import { useLocales } from "hooks/useLocales";
 import React, { FC, useContext } from "react";
 
 import AppTable from "./AppTable";
@@ -29,7 +30,7 @@ import CreateApplicationTriggerBtn from "./CreateApplicationTriggerBtn";
 const SelectAppTriggerBtn: FC = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { currApplication } = useContext(AppViewContext);
-
+  const { t } = useLocales();
   return (
     <>
       <Button
@@ -38,14 +39,18 @@ const SelectAppTriggerBtn: FC = () => {
         colorScheme="gray"
         rightIcon={<BsChevronDown />}
         onClick={onOpen}>
-        <Text isTruncated>{currApplication?.title ?? "Select Application"}</Text>
+        <Text isTruncated>
+          {currApplication?.title ?? t("applicationScreen.modalHeaders.selectApp")}
+        </Text>
       </Button>
 
       <Modal isOpen={isOpen} onClose={onClose} scrollBehavior="inside" size="5xl">
         <ModalOverlay />
         <ModalContent>
           <Flex align="center" justify="center">
-            <ModalHeader minWidth="max-content">Select Project</ModalHeader>
+            <ModalHeader minWidth="max-content">
+              {t("applicationScreen.modalHeaders.selectApp")}
+            </ModalHeader>
             <Spacer></Spacer>
             <Box mr="20">
               <CreateApplicationTriggerBtn />
@@ -57,11 +62,11 @@ const SelectAppTriggerBtn: FC = () => {
           <ModalBody>
             <Tabs>
               <TabList>
-                <Tab>Recent</Tab>
+                <Tab>{t("SelectorTabs.recent")}</Tab>
                 <Tab>
-                  <Box>Starred</Box>
+                  <Box>{t("SelectorTabs.starred")}</Box>
                 </Tab>
-                <Tab>All</Tab>
+                <Tab>{t("SelectorTabs.all")}</Tab>
               </TabList>
 
               <TabPanels>
@@ -80,7 +85,7 @@ const SelectAppTriggerBtn: FC = () => {
           <Divider />
           <ModalFooter>
             <Button colorScheme="blue" mr={3} onClick={onClose}>
-              Close
+              {t("commonButtons.close")}
             </Button>
           </ModalFooter>
         </ModalContent>

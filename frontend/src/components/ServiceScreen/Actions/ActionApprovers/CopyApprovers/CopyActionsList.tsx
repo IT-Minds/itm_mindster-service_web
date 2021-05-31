@@ -1,4 +1,5 @@
 import { Button, Checkbox, Table, Tbody, Th, Thead, Tr, VStack } from "@chakra-ui/react";
+import { useLocales } from "hooks/useLocales";
 import React, { FC, useCallback, useState } from "react";
 import { ActionIdDto, IActionIdDto } from "services/backend/nswagts";
 
@@ -12,6 +13,7 @@ type Props = {
 const CopyActionList: FC<Props> = ({ tableData, submitCallback }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [allChecked, setAllChecked] = useState(false);
+  const { t } = useLocales();
   const [checkboxes, setCheckboxes] = useState(() =>
     tableData.map(action => ({
       id: action.id,
@@ -60,8 +62,8 @@ const CopyActionList: FC<Props> = ({ tableData, submitCallback }) => {
       <Table variant="simple" size="sm">
         <Thead>
           <Tr>
-            <Th>Id</Th>
-            <Th>Title</Th>
+            <Th>{t("entityVariables.identifier")}</Th>
+            <Th>{t("entityVariables.description")}</Th>
             <Th>
               <Checkbox
                 isChecked={allChecked}
@@ -89,7 +91,7 @@ const CopyActionList: FC<Props> = ({ tableData, submitCallback }) => {
         colorScheme="blue"
         mt="20"
         type="submit">
-        Copy approvers
+        {t("serviceScreen.actions.copyApprovers")}
       </Button>
     </VStack>
   );

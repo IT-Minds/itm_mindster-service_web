@@ -51,7 +51,7 @@ const CreateTokenTriggerBtn: FC = () => {
         );
         fetchUpdatedToken(result);
         toast({
-          description: "AppToken was created",
+          description: t("toasts.xCreated", { x: t("entityNames.single.token") }),
           status: "success",
           duration: 5000,
           isClosable: true
@@ -60,7 +60,9 @@ const CreateTokenTriggerBtn: FC = () => {
         onClose();
       } catch (error) {
         toast({
-          description: `CreateAppToken responded: ${error}`,
+          description: `${t("toasts.xCreatedE", {
+            x: t("entityNames.single.token")
+          })} ${error}`,
           status: "error",
           duration: 5000,
           isClosable: true
@@ -85,7 +87,7 @@ const CreateTokenTriggerBtn: FC = () => {
             onClick={onOpen}
             rightIcon={<BsPlus />}
             colorScheme="green">
-            Create new token
+            {t("applicationScreen.buttons.createToken")}
           </Button>
         </Tag>
       </Tooltip>
@@ -97,9 +99,9 @@ const CreateTokenTriggerBtn: FC = () => {
           <DrawerContent>
             <DrawerHeader>
               <Flex>
-                <Box>Create a new token</Box>
+                <Box>{t("applicationScreen.modalHeaders.createNewToken")}</Box>
                 <Spacer />
-                <CloseButton onClick={onClose} />
+                <CloseButton onClick={() => onClose()} />
               </Flex>
             </DrawerHeader>
             <DrawerBody>
@@ -107,7 +109,9 @@ const CreateTokenTriggerBtn: FC = () => {
                 <Container height="full" w="4xl" maxW="unset">
                   <Flex direction="column" width="full" height="full">
                     <CollapsibleInfoBox
-                      text={t("applicationScreen.infoBoxes.createTokenInfo")}></CollapsibleInfoBox>
+                      text={t(
+                        "applicationScreen.tokens.infoBoxes.createTokenInfo"
+                      )}></CollapsibleInfoBox>
                     <AppTokenForm submitCallback={createAppToken}></AppTokenForm>
                     <Spacer />
                     <ThreeStepShower radius={50} stepCounter={1} />

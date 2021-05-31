@@ -21,6 +21,7 @@ import {
 } from "@chakra-ui/react";
 import { BsChevronDown } from "@react-icons/all-files/bs/BsChevronDown";
 import { ServiceViewContext } from "contexts/ServiceViewContext";
+import { useLocales } from "hooks/useLocales";
 import React, { FC, useContext } from "react";
 
 import CreateServiceTriggerBtn from "./CreateServiceTriggerBtn";
@@ -29,6 +30,9 @@ import ServiceTable from "./ServiceTable";
 const SelectServiceTriggerBtn: FC = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { currService } = useContext(ServiceViewContext);
+  const { t } = useLocales();
+
+  const selectString = t("serviceScreen.modalHeaders.selectService");
 
   return (
     <>
@@ -38,14 +42,14 @@ const SelectServiceTriggerBtn: FC = () => {
         rightIcon={<BsChevronDown />}
         colorScheme="gray"
         onClick={onOpen}>
-        <Text isTruncated>{currService?.title ?? "Select Service"}</Text>
+        <Text isTruncated>{currService?.title ?? selectString}</Text>
       </Button>
 
       <Modal isOpen={isOpen} onClose={onClose} scrollBehavior="inside" size="5xl">
         <ModalOverlay />
         <ModalContent>
           <Flex align="center" justify="center">
-            <ModalHeader minWidth="max-content">Select Project</ModalHeader>
+            <ModalHeader minWidth="max-content">{selectString}</ModalHeader>
             <Spacer></Spacer>
             <Box mr="20">
               <CreateServiceTriggerBtn />
@@ -57,11 +61,11 @@ const SelectServiceTriggerBtn: FC = () => {
           <ModalBody>
             <Tabs>
               <TabList>
-                <Tab>Recent</Tab>
+                <Tab>{t("SelectorTabs.recent")}</Tab>
                 <Tab>
-                  <Box>Starred</Box>
+                  <Box>{t("SelectorTabs.starred")}</Box>
                 </Tab>
-                <Tab>All</Tab>
+                <Tab>{t("SelectorTabs.all")}</Tab>
               </TabList>
 
               <TabPanels>
@@ -80,7 +84,7 @@ const SelectServiceTriggerBtn: FC = () => {
           <Divider />
           <ModalFooter>
             <Button colorScheme="blue" mr={3} onClick={onClose}>
-              Close
+              {t("commonButtons.close")}
             </Button>
           </ModalFooter>
         </ModalContent>

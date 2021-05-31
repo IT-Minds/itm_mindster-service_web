@@ -2,10 +2,10 @@ import { Box, Button, Td, Tr } from "@chakra-ui/react";
 import ServiceLibraryDrawer from "components/ServiceLibrary/ServiceLibraryDrawer";
 import { AppViewContext } from "contexts/AppViewContext";
 import { useButtonSizes } from "hooks/useButtonSizes";
+import { useLocales } from "hooks/useLocales";
 import React, { FC, useContext, useState } from "react";
 import { AppTokenIdDto, TokenStates } from "services/backend/nswagts";
 
-import GetJwtTriggerBtn from "./AuthToken/GetJwtTriggerBtn";
 import SeeTokenStatusDrawer from "./TokenStatus/SeeTokenStatusDrawer";
 
 type Props = {
@@ -15,6 +15,7 @@ const TokenTableItem: FC<Props> = ({ token }) => {
   const { fetchUpdatedToken } = useContext(AppViewContext);
   const [libraryOpen, setOpen] = useState(false);
   const { defBtnSize } = useButtonSizes();
+  const { t } = useLocales();
 
   return (
     <Tr>
@@ -36,14 +37,14 @@ const TokenTableItem: FC<Props> = ({ token }) => {
           )}
           {token.state == TokenStates.AwaitingReview && (
             <SeeTokenStatusDrawer
-              buttonText="Check status"
+              buttonText={t("applicationScreen.tokens.actions.browseServices")}
               submitOnOpen={() => fetchUpdatedToken(token.id)}
               submitOnClose={() => null}
             />
           )}
           {token.state == TokenStates.Reviewed && (
             <SeeTokenStatusDrawer
-              buttonText="Check status"
+              buttonText={t("applicationScreen.tokens.actions.checkStatus")}
               submitOnOpen={() => fetchUpdatedToken(token.id)}
               submitOnClose={() => null}
             />
@@ -51,7 +52,7 @@ const TokenTableItem: FC<Props> = ({ token }) => {
           {token.state == TokenStates.JwtReceived && (
             // <GetJwtTriggerBtn submitOnOpen={() => fetchUpdatedToken(token.id)} />
             <SeeTokenStatusDrawer
-              buttonText="Details"
+              buttonText={t("applicationScreen.tokens.actions.details")}
               submitOnOpen={() => fetchUpdatedToken(token.id)}
               submitOnClose={() => null}
             />

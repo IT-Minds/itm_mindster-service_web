@@ -20,6 +20,7 @@ import RequestActions from "components/Forms/RequestActions/RequestActions";
 import MarkdownViewer from "components/Markdown/MarkdownViewer";
 import { AppViewContext } from "contexts/AppViewContext";
 import { useColors } from "hooks/useColors";
+import { useLocales } from "hooks/useLocales";
 import React, { FC, useContext, useEffect, useState } from "react";
 import { ServiceIdDto } from "services/backend/nswagts";
 
@@ -32,6 +33,7 @@ const LibraryCard: FC<Props> = ({ service }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { currToken } = useContext(AppViewContext);
   const [existingActions, setExistingActions] = useState<number[]>([]);
+  const { t } = useLocales();
 
   useEffect(() => {
     if (currToken) {
@@ -68,13 +70,16 @@ const LibraryCard: FC<Props> = ({ service }) => {
         </Heading>
         <Spacer />
         <Heading mt="6" fontSize="sm">
-          Amount of actions: {service.actions.length}
+          {t("applicationScreen.serviceLibrary.amountOfActions", { x: service.actions.length })}
         </Heading>
         <Spacer />
         {existingActions.length != 0 && (
           <Flex mt="6" align="center">
             <Heading fontSize="sm">
-              Requested: {`${existingActions.length} / ${service.actions.length}`}
+              {t("applicationScreen.serviceLibrary.requested", {
+                x: existingActions.length,
+                y: service.actions.length
+              })}
             </Heading>
             <Box ml="2px">
               <BsPencilSquare />
@@ -86,7 +91,9 @@ const LibraryCard: FC<Props> = ({ service }) => {
       <Modal isOpen={isOpen} onClose={onClose} scrollBehavior="inside" size="full">
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Service: {service.title}</ModalHeader>
+          <ModalHeader>
+            {t("entityNames.single.service")}: {service.title}
+          </ModalHeader>
           <ModalCloseButton />
           <ModalBody>
             <Center>
@@ -101,7 +108,7 @@ const LibraryCard: FC<Props> = ({ service }) => {
           </ModalBody>
           <ModalFooter>
             <Button colorScheme="blue" mr={3} onClick={onClose}>
-              Close
+              {t("commonButtons.close")}
             </Button>
           </ModalFooter>
         </ModalContent>

@@ -1,4 +1,5 @@
 import { Box, FormControl, FormLabel, HStack, Input, Select } from "@chakra-ui/react";
+import { useLocales } from "hooks/useLocales";
 import React, { FC, useCallback } from "react";
 import { AppTokenActionUpdateDto, ServiceStates } from "services/backend/nswagts";
 
@@ -9,6 +10,7 @@ type Props = {
 };
 
 const ReviewTokenFormItem: FC<Props> = ({ index, localFormData, submitCallback }) => {
+  const { t } = useLocales();
   const handleStateChange = useCallback(
     (value: number) => {
       localFormData.state = value;
@@ -28,13 +30,17 @@ const ReviewTokenFormItem: FC<Props> = ({ index, localFormData, submitCallback }
     <HStack spacing="5" p="2">
       <Box width="150px">
         <FormControl isRequired>
-          <FormLabel> Response</FormLabel>
+          <FormLabel>{t("serviceScreen.pendingTokens.reviewModal.response")}</FormLabel>
           <Select
             defaultValue={localFormData.state}
-            placeholder={`Pending`}
+            placeholder={t("serviceScreen.pendingTokens.reviewModal.responses.pending")}
             onChange={event => handleStateChange(parseInt(event.target.value))}>
-            <option value={ServiceStates.Approved}>Approve</option>
-            <option value={ServiceStates.Rejected}>Reject</option>
+            <option value={ServiceStates.Approved}>
+              {t("serviceScreen.pendingTokens.reviewModal.responses.approved")}
+            </option>
+            <option value={ServiceStates.Rejected}>
+              {t("serviceScreen.pendingTokens.reviewModal.responses.rejected")}
+            </option>
           </Select>
         </FormControl>
       </Box>
@@ -42,10 +48,9 @@ const ReviewTokenFormItem: FC<Props> = ({ index, localFormData, submitCallback }
         <FormControl
           isRequired={localFormData.state == ServiceStates.Rejected}
           isReadOnly={localFormData.state != ServiceStates.Rejected}>
-          <FormLabel>Rejection Reason: </FormLabel>
+          <FormLabel>{t("serviceScreen.pendingTokens.reviewModal.rejectionReason")}: </FormLabel>
           <Input
             type="text"
-            placeholder="Why the rejection?"
             value={localFormData.rejectionReason}
             onChange={event => handleTextChange(event.target.value)}></Input>
         </FormControl>
