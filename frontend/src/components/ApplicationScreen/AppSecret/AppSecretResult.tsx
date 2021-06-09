@@ -15,7 +15,9 @@ import {
   useDisclosure,
   useToast
 } from "@chakra-ui/react";
+import UnsavedChangesAlert from "components/Common/UnsavedChangesAlert";
 import { useLocales } from "hooks/useLocales";
+import { useUnsavedAlert } from "hooks/useUnsavedAlert";
 import React, { FC, useCallback, useState } from "react";
 import { genApplicationClient } from "services/backend/apiClients";
 import { CreateAppSecretCommand } from "services/backend/nswagts";
@@ -33,6 +35,7 @@ const AppSecretResult: FC<Props> = ({ submitCallback, currAppId, isLoading, setI
   const { hasCopied, onCopy } = useClipboard(appSecret);
   const toast = useToast();
   const { t } = useLocales();
+  const { setUnsavedChanges, alertOpen, setAlertOpen, unsavedChanged } = useUnsavedAlert();
 
   const generateAppSecret = useCallback(async () => {
     setIsLoading(true);
@@ -62,7 +65,10 @@ const AppSecretResult: FC<Props> = ({ submitCallback, currAppId, isLoading, setI
         <Text>{t("applicationScreen.tokens.appSecret.appSecretWarning")}</Text>
         <Button
           isLoading={isLoading}
-          onClick={() => generateAppSecret()}
+          onClick={() => {
+            generateAppSecret();
+            setUnsavedChanges(true);
+          }}
           colorScheme="green"
           mt="10px">
           {t("applicationScreen.tokens.appSecret.generateSecret")}
@@ -73,8 +79,12 @@ const AppSecretResult: FC<Props> = ({ submitCallback, currAppId, isLoading, setI
         closeOnEsc={false}
         isOpen={isOpen}
         onClose={() => {
-          onClose();
-          submitCallback();
+          if (unsavedChanged) {
+            setAlertOpen(true);
+          } else {
+            submitCallback();
+            onClose();
+          }
         }}
         scrollBehavior="inside"
         size="2xl">
@@ -84,6 +94,15 @@ const AppSecretResult: FC<Props> = ({ submitCallback, currAppId, isLoading, setI
           <ModalCloseButton />
           <Divider />
           <ModalBody>
+            <UnsavedChangesAlert
+              isOpen={alertOpen}
+              setIsOpen={setAlertOpen}
+              text={t("applicationScreen.tokens.appSecret.haveYouSavedAppSecret")}
+              onClick={() => {
+                onClose();
+                submitCallback();
+              }}
+            />
             <Text>{appSecret}</Text>
           </ModalBody>
           <Divider />
@@ -95,8 +114,12 @@ const AppSecretResult: FC<Props> = ({ submitCallback, currAppId, isLoading, setI
               colorScheme="red"
               mr={3}
               onClick={() => {
-                onClose();
-                submitCallback();
+                if (unsavedChanged) {
+                  setAlertOpen(true);
+                } else {
+                  submitCallback();
+                  onClose();
+                }
               }}>
               {t("commonButtons.close")}
             </Button>

@@ -1,6 +1,7 @@
 import { Box, Button, Center, Heading, useToast, VStack } from "@chakra-ui/react";
 import { ServiceViewContext } from "contexts/ServiceViewContext";
 import { useLocales } from "hooks/useLocales";
+import { useUnsavedAlert } from "hooks/useUnsavedAlert";
 import React, { FC, useCallback, useContext, useState } from "react";
 import { genApplicationClient } from "services/backend/apiClients";
 import {
@@ -21,6 +22,7 @@ const ReviewTokenForm: FC<Props> = ({ token }) => {
   const [isLoading, setIsLoading] = useState(false);
   const toast = useToast();
   const { t } = useLocales();
+  const { setUnsavedChanges } = useUnsavedAlert();
   const [actions, setActions] = useState<AppTokenActionUpdateDto[]>(() =>
     token.appTokenActions.map(
       action =>
@@ -46,6 +48,7 @@ const ReviewTokenForm: FC<Props> = ({ token }) => {
             })
           })
         );
+        setUnsavedChanges(false);
         toast({
           description: t("toasts.submitted"),
           status: "success",
@@ -68,6 +71,7 @@ const ReviewTokenForm: FC<Props> = ({ token }) => {
 
   const updateAction = useCallback(
     (index: number, action: AppTokenActionUpdateDto) => {
+      setUnsavedChanges(true);
       setActions(
         actions.map(x => {
           if (actions.indexOf(x) == index) x == action;

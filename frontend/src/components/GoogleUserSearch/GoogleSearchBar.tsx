@@ -6,8 +6,9 @@ import { Box, Flex } from "@chakra-ui/layout";
 import { Popover, PopoverBody, PopoverContent } from "@chakra-ui/popover";
 import { Tag } from "@chakra-ui/tag";
 import { BsX } from "@react-icons/all-files/bs/BsX";
+import { UnsavedChangesContext } from "contexts/UnsavedChangesContext";
 import { useLocales } from "hooks/useLocales";
-import React, { FC, useCallback, useEffect, useReducer, useState } from "react";
+import React, { FC, useCallback, useContext, useEffect, useReducer, useState } from "react";
 import ListReducer, { ListReducerActionType } from "react-list-reducer";
 import { genGoogleUserClient } from "services/backend/apiClients";
 import { IUser } from "services/backend/nswagts";
@@ -25,6 +26,7 @@ const GoogleSearchBar: FC<Props> = ({ submitUsers }) => {
   const [filteredUsers, setFilteredUsers] = useState<IUser[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const { t } = useLocales();
+  const { setUnsavedChanges } = useContext(UnsavedChangesContext);
 
   const fetchGoogleUsers = useCallback(async () => {
     try {
@@ -48,6 +50,9 @@ const GoogleSearchBar: FC<Props> = ({ submitUsers }) => {
   // Tells parent component that the local userList has been changed
   useEffect(() => {
     submitUsers(addedUsers);
+
+    if (addedUsers.length > 0) setUnsavedChanges(true);
+    else setUnsavedChanges(false);
   }, [addedUsers]);
 
   const addUser = useCallback(

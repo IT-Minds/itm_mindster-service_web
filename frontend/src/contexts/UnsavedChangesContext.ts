@@ -5,5 +5,9 @@ type ContextType = ReturnType<typeof useProtectChanges>;
 
 export const UnsavedChangesContext = createContext<ContextType>({
   unsavedChanged: false,
-  setUnsavedChanges: () => null
+  setUnsavedChanges: () => null,
+  alertOpen: false,
+  setAlertOpen: () => null,
+  targetUrl: null,
+  setTargetUrl: () => null
 });

@@ -12,8 +12,10 @@ import {
   useToast
 } from "@chakra-ui/react";
 import { BsPlus } from "@react-icons/all-files/bs/BsPlus";
+import UnsavedChangesAlert from "components/Common/UnsavedChangesAlert";
 import { AppViewContext } from "contexts/AppViewContext";
 import { useLocales } from "hooks/useLocales";
+import { useUnsavedAlert } from "hooks/useUnsavedAlert";
 import React, { FC, useCallback, useContext } from "react";
 import { genApplicationClient } from "services/backend/apiClients";
 import { ApplicationOwnerDto, CreateApplicationOwnerCommand } from "services/backend/nswagts";
@@ -25,6 +27,7 @@ const AddOwnersTriggerBtn: FC = () => {
   const { fetchAppOwners, currApplication } = useContext(AppViewContext);
   const toast = useToast();
   const { t } = useLocales();
+  const { setUnsavedChanges, alertOpen, setAlertOpen, unsavedChanged } = useUnsavedAlert();
 
   const addOwners = useCallback(
     async (form: ApplicationOwnerDto[]) => {
@@ -36,6 +39,7 @@ const AddOwnersTriggerBtn: FC = () => {
             appOwners: form
           })
         );
+        setUnsavedChanges(false);
         toast({
           description: t("toasts.xAdded", { x: t("entityNames.plural.owners") }),
           status: "success",
@@ -66,7 +70,15 @@ const AddOwnersTriggerBtn: FC = () => {
         {t("applicationScreen.buttons.addOwners")}
       </Button>
 
-      <Modal isOpen={isOpen} onClose={onClose} scrollBehavior="inside" size="5xl">
+      <Modal
+        isOpen={isOpen}
+        onClose={() => {
+          if (unsavedChanged) {
+            setAlertOpen(true);
+          } else onClose();
+        }}
+        scrollBehavior="inside"
+        size="5xl">
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>
@@ -75,11 +87,23 @@ const AddOwnersTriggerBtn: FC = () => {
           <ModalCloseButton />
           <Divider />
           <ModalBody>
+            <UnsavedChangesAlert
+              isOpen={alertOpen}
+              setIsOpen={setAlertOpen}
+              onClick={() => onClose()}
+            />
             <AppOwnerForm submitCallback={addOwners}></AppOwnerForm>
           </ModalBody>
           <Divider />
           <ModalFooter>
-            <Button colorScheme="blue" mr={3} onClick={onClose}>
+            <Button
+              colorScheme="blue"
+              mr={3}
+              onClick={() => {
+                if (unsavedChanged) {
+                  setAlertOpen(true);
+                } else onClose();
+              }}>
               {t("commonButtons.close")}
             </Button>
           </ModalFooter>

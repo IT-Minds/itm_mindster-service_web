@@ -32,12 +32,12 @@ const TokenTableItem: FC<Props> = ({ token }) => {
                 await fetchUpdatedToken(token.id);
                 setOpen(true);
               }}>
-              Browse Services
+              {t("applicationScreen.tokens.actions.browseServices")}
             </Button>
           )}
           {token.state == TokenStates.AwaitingReview && (
             <SeeTokenStatusDrawer
-              buttonText={t("applicationScreen.tokens.actions.browseServices")}
+              buttonText={t("applicationScreen.tokens.actions.checkStatus")}
               submitOnOpen={() => fetchUpdatedToken(token.id)}
               submitOnClose={() => null}
             />

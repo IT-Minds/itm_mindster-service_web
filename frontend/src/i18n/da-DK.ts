@@ -147,7 +147,9 @@ export const table: Locale = {
         og derfra JWT's`,
         appSecretWarning: `Dette kan kun gøres en gang og du er selv ansvarlig for at holde din secret sikker og hemmelig.
         Du bruger AppSecret'en til at signere dine tokens for derefter at få genereret en JWT`,
-        generateSecret: "Generer AppSecret"
+        generateSecret: "Generer AppSecret",
+        haveYouSavedAppSecret: `Er du sikker på at du har gemt din AppSecret korrekt og sikkert.
+        Den kan ikke generes igen senere, og uden den kan du ikke genere nye JWT's`
       }
     }
   },

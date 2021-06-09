@@ -12,9 +12,11 @@ import {
   useToast
 } from "@chakra-ui/react";
 import { BsPlus } from "@react-icons/all-files/bs/BsPlus";
+import UnsavedChangesAlert from "components/Common/UnsavedChangesAlert";
 import ActionForm from "components/Forms/Action/ActionForm";
 import { ServiceViewContext } from "contexts/ServiceViewContext";
 import { useLocales } from "hooks/useLocales";
+import { useUnsavedAlert } from "hooks/useUnsavedAlert";
 import React, { FC, useCallback, useContext } from "react";
 import { genServiceClient } from "services/backend/apiClients";
 import { ActionDto, CreateActionCommand } from "services/backend/nswagts";
@@ -25,6 +27,7 @@ const CreateActionTriggerBtn: FC = () => {
   const { currService, setNewCurrService } = useContext(ServiceViewContext);
   const { t } = useLocales();
   const toast = useToast();
+  const { alertOpen, setAlertOpen, unsavedChanged } = useUnsavedAlert();
 
   const createAction = useCallback(
     async (metaData: ActionDto) => {
@@ -59,6 +62,7 @@ const CreateActionTriggerBtn: FC = () => {
         });
       } finally {
         setNewCurrService(currService.id);
+        onClose();
       }
     },
     [currService]
@@ -71,18 +75,40 @@ const CreateActionTriggerBtn: FC = () => {
         {t("serviceScreen.buttons.createNewAction")}
       </Button>
 
-      <Modal isOpen={isOpen} onClose={onClose} scrollBehavior="inside" size="5xl">
+      <Modal
+        isOpen={isOpen}
+        onClose={() => {
+          if (unsavedChanged) {
+            setAlertOpen(true);
+          } else onClose();
+        }}
+        scrollBehavior="inside"
+        size="5xl">
         <ModalOverlay />
         <ModalContent>
           <ModalHeader> {t("serviceScreen.modalHeaders.addAction")}</ModalHeader>
           <ModalCloseButton />
           <Divider />
           <ModalBody>
+            <UnsavedChangesAlert
+              isOpen={alertOpen}
+              setIsOpen={setAlertOpen}
+              onClick={() => {
+                onClose();
+              }}
+            />
             <ActionForm submitCallback={createAction} />
           </ModalBody>
           <Divider />
           <ModalFooter>
-            <Button colorScheme="blue" mr={3} onClick={onClose}>
+            <Button
+              colorScheme="blue"
+              mr={3}
+              onClick={() => {
+                if (unsavedChanged) {
+                  setAlertOpen(true);
+                } else onClose();
+              }}>
               {t("commonButtons.close")}
             </Button>
           </ModalFooter>

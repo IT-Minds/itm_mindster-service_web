@@ -111,6 +111,7 @@ export interface Locale {
         appSecretWarningBar: string;
         appSecretWarning: string;
         generateSecret: string;
+        haveYouSavedAppSecret: string;
       };
     };
   };

@@ -1,6 +1,7 @@
 import { Button, Checkbox, Table, Tbody, Th, Thead, Tr, VStack } from "@chakra-ui/react";
+import { UnsavedChangesContext } from "contexts/UnsavedChangesContext";
 import { useLocales } from "hooks/useLocales";
-import React, { FC, useCallback, useState } from "react";
+import React, { FC, useCallback, useContext, useEffect, useState } from "react";
 import { ActionIdDto, IActionIdDto } from "services/backend/nswagts";
 
 import CopyActionListItem from "./CopyActionListItem";
@@ -20,6 +21,12 @@ const CopyActionList: FC<Props> = ({ tableData, submitCallback }) => {
       checked: false
     }))
   );
+  const { setUnsavedChanges } = useContext(UnsavedChangesContext);
+
+  useEffect(() => {
+    if (checkboxes.find(e => e.checked == true)) setUnsavedChanges(true);
+    else setUnsavedChanges(false);
+  }, [checkboxes]);
 
   const checkAll = useCallback(() => {
     setCheckboxes(
@@ -53,6 +60,7 @@ const CopyActionList: FC<Props> = ({ tableData, submitCallback }) => {
         approvers.push(modal.id);
       }
     });
+    setUnsavedChanges(false);
     await submitCallback(approvers);
     setIsLoading(false);
   }, [checkboxes]);

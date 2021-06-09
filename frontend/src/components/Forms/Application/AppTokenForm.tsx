@@ -10,8 +10,9 @@ import {
   Textarea,
   Wrap
 } from "@chakra-ui/react";
+import { UnsavedChangesContext } from "contexts/UnsavedChangesContext";
 import { useLocales } from "hooks/useLocales";
-import React, { FC, useCallback, useEffect, useState } from "react";
+import React, { FC, useCallback, useContext, useEffect, useState } from "react";
 import { AppTokenCreateDto, IAppTokenCreateDto } from "services/backend/nswagts";
 import { convertToIdentifier } from "utils/convertTitleToIdentifier";
 
@@ -25,11 +26,13 @@ const AppTokenForm: FC<Props> = ({ submitCallback }) => {
   const [identifier, setIdentifier] = useState("");
   const [title, setTitle] = useState("");
   const { t } = useLocales();
+  const { setUnsavedChanges } = useContext(UnsavedChangesContext);
 
   const handleSubmit = useCallback(
     async event => {
       event.preventDefault();
       setIsLoading(true);
+      setUnsavedChanges(false);
       await submitCallback(
         new AppTokenCreateDto({ tokenIdentifier: identifier, description: description })
       );
@@ -44,6 +47,12 @@ const AppTokenForm: FC<Props> = ({ submitCallback }) => {
       return () => clearTimeout(timeOutId);
     } else setIdentifier("");
   }, [title]);
+
+  useEffect(() => {
+    if (title || description) {
+      setUnsavedChanges(true);
+    } else setUnsavedChanges(false);
+  }, [title, description]);
 
   return (
     <Center>

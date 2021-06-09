@@ -17,10 +17,12 @@ import {
   useToast
 } from "@chakra-ui/react";
 import { BsPlus } from "@react-icons/all-files/bs/BsPlus";
+import UnsavedChangesAlert from "components/Common/UnsavedChangesAlert";
 import AppTokenForm from "components/Forms/Application/AppTokenForm";
 import ServiceLibraryDrawer from "components/ServiceLibrary/ServiceLibraryDrawer";
 import { AppViewContext } from "contexts/AppViewContext";
 import { useLocales } from "hooks/useLocales";
+import { useUnsavedAlert } from "hooks/useUnsavedAlert";
 import React, { FC, useCallback, useContext, useState } from "react";
 import { genApplicationClient } from "services/backend/apiClients";
 import { AppTokenCreateDto, CreateAppTokenCommand } from "services/backend/nswagts";
@@ -35,6 +37,7 @@ const CreateTokenTriggerBtn: FC = () => {
   const toast = useToast();
   const [open, setOpen] = useState(false);
   const { t } = useLocales();
+  const { alertOpen, setAlertOpen, unsavedChanged } = useUnsavedAlert();
 
   const createAppToken = useCallback(
     async (metaData: AppTokenCreateDto) => {
@@ -94,17 +97,37 @@ const CreateTokenTriggerBtn: FC = () => {
 
       <ServiceLibraryDrawer Open={open} setOpen={setOpen} />
 
-      <Drawer onClose={onClose} isOpen={isOpen} size="full">
+      <Drawer
+        onClose={() => {
+          if (unsavedChanged) {
+            setAlertOpen(true);
+          } else onClose();
+        }}
+        isOpen={isOpen}
+        size="full">
         <DrawerOverlay>
           <DrawerContent>
             <DrawerHeader>
               <Flex>
                 <Box>{t("applicationScreen.modalHeaders.createNewToken")}</Box>
                 <Spacer />
-                <CloseButton onClick={() => onClose()} />
+                <CloseButton
+                  onClick={() => {
+                    if (unsavedChanged) {
+                      setAlertOpen(true);
+                    } else onClose();
+                  }}
+                />
               </Flex>
             </DrawerHeader>
             <DrawerBody>
+              <UnsavedChangesAlert
+                isOpen={alertOpen}
+                setIsOpen={setAlertOpen}
+                onClick={() => {
+                  onClose();
+                }}
+              />
               <Center height="full">
                 <Container height="full" w="4xl" maxW="unset">
                   <Flex direction="column" width="full" height="full">

@@ -10,8 +10,10 @@ import {
   ModalOverlay,
   useDisclosure
 } from "@chakra-ui/react";
+import UnsavedChangesAlert from "components/Common/UnsavedChangesAlert";
 import ReviewTokenForm from "components/Forms/ReviewAcces/ReviewTokenForm";
 import { useLocales } from "hooks/useLocales";
+import { useUnsavedAlert } from "hooks/useUnsavedAlert";
 import React, { FC } from "react";
 import { AppTokenIdDto } from "services/backend/nswagts";
 
@@ -22,6 +24,7 @@ type Props = {
 const ReviewTokenModalTrigger: FC<Props> = ({ token }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { t } = useLocales();
+  const { alertOpen, setAlertOpen, unsavedChanged } = useUnsavedAlert();
 
   return (
     <>
@@ -29,7 +32,15 @@ const ReviewTokenModalTrigger: FC<Props> = ({ token }) => {
         {t("serviceScreen.pendingTokens.reviewToken")}
       </Button>
 
-      <Modal isOpen={isOpen} onClose={onClose} scrollBehavior="inside" size="4xl">
+      <Modal
+        isOpen={isOpen}
+        onClose={() => {
+          if (unsavedChanged) {
+            setAlertOpen(true);
+          } else onClose();
+        }}
+        scrollBehavior="inside"
+        size="4xl">
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>
@@ -40,11 +51,25 @@ const ReviewTokenModalTrigger: FC<Props> = ({ token }) => {
           <ModalCloseButton />
           <Divider />
           <ModalBody>
+            <UnsavedChangesAlert
+              isOpen={alertOpen}
+              setIsOpen={setAlertOpen}
+              onClick={() => {
+                onClose();
+              }}
+            />
             <ReviewTokenForm token={token} />
           </ModalBody>
           <Divider />
           <ModalFooter>
-            <Button colorScheme="blue" mr={3} onClick={onClose}>
+            <Button
+              colorScheme="blue"
+              mr={3}
+              onClick={() => {
+                if (unsavedChanged) {
+                  setAlertOpen(true);
+                } else onClose();
+              }}>
               {t("commonButtons.close")}
             </Button>
           </ModalFooter>

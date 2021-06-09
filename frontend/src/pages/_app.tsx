@@ -2,6 +2,7 @@ import "../styles.global.css";
 import "isomorphic-unfetch";
 
 import { Center, ChakraProvider, CircularProgress } from "@chakra-ui/react";
+import RouteAlertModal from "components/Common/RouteAlertModal";
 import { UnsavedChangesContext } from "contexts/UnsavedChangesContext";
 import { AuthStage, useAuth } from "hooks/useAuth";
 import { useProtectChanges } from "hooks/useProtectChanges";
@@ -77,6 +78,7 @@ const MyApp = ({ Component, pageProps, __N_SSG, router }: AppPropsType & Props):
         <I18nProvider table={pageProps.table}>
           <ChakraProvider theme={theme}>
             <UnsavedChangesContext.Provider value={protectChanges}>
+              <RouteAlertModal />
               {/* <AuthContext.Provider value={auth}> */}
               {/* <SignalRContext.Provider value={{ connection }}> */}
               <Component {...pageProps} />

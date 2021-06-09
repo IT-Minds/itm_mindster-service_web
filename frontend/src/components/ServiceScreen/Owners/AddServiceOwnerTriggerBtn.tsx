@@ -12,9 +12,11 @@ import {
   useToast
 } from "@chakra-ui/react";
 import { BsPlus } from "@react-icons/all-files/bs/BsPlus";
+import UnsavedChangesAlert from "components/Common/UnsavedChangesAlert";
 import ServiceOwnerForm from "components/Forms/Service/ServiceOwnerForm";
 import { ServiceViewContext } from "contexts/ServiceViewContext";
 import { useLocales } from "hooks/useLocales";
+import { useUnsavedAlert } from "hooks/useUnsavedAlert";
 import React, { FC, useCallback, useContext } from "react";
 import { genServiceClient } from "services/backend/apiClients";
 import { CreateServiceOwnerCommand, ServiceOwnerDto } from "services/backend/nswagts";
@@ -24,6 +26,7 @@ const AddServiceOwnersTriggerBtn: FC = () => {
   const { fetchOwners, currService } = useContext(ServiceViewContext);
   const { t } = useLocales();
   const toast = useToast();
+  const { setUnsavedChanges, alertOpen, setAlertOpen, unsavedChanged } = useUnsavedAlert();
 
   const addOwners = useCallback(
     async (form: ServiceOwnerDto[]) => {
@@ -35,6 +38,7 @@ const AddServiceOwnersTriggerBtn: FC = () => {
             serviceOwners: form
           })
         );
+        setUnsavedChanges(false);
         toast({
           description: t("toasts.xAdded", { x: t("entityNames.plural.owners") }),
           status: "success",
@@ -64,7 +68,15 @@ const AddServiceOwnersTriggerBtn: FC = () => {
         {t("serviceScreen.buttons.addOwners")}
       </Button>
 
-      <Modal isOpen={isOpen} onClose={onClose} scrollBehavior="inside" size="5xl">
+      <Modal
+        isOpen={isOpen}
+        onClose={() => {
+          if (unsavedChanged) {
+            setAlertOpen(true);
+          } else onClose();
+        }}
+        scrollBehavior="inside"
+        size="5xl">
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>
@@ -75,11 +87,25 @@ const AddServiceOwnersTriggerBtn: FC = () => {
           <ModalCloseButton />
           <Divider />
           <ModalBody>
+            <UnsavedChangesAlert
+              isOpen={alertOpen}
+              setIsOpen={setAlertOpen}
+              onClick={() => {
+                onClose();
+              }}
+            />
             <ServiceOwnerForm submitCallback={addOwners} />
           </ModalBody>
           <Divider />
           <ModalFooter>
-            <Button colorScheme="blue" mr={3} onClick={onClose}>
+            <Button
+              colorScheme="blue"
+              mr={3}
+              onClick={() => {
+                if (unsavedChanged) {
+                  setAlertOpen(true);
+                } else onClose();
+              }}>
               {t("commonButtons.close")}
             </Button>
           </ModalFooter>
