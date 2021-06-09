@@ -5,7 +5,7 @@ import { BsStarFill } from "@react-icons/all-files/bs/BsStarFill";
 import { AppViewContext } from "contexts/AppViewContext";
 import { useColors } from "hooks/useColors";
 import { useRouter } from "next/router";
-import React, { FC, useContext, useState } from "react";
+import React, { FC, useCallback, useContext, useState } from "react";
 import { ApplicationIdDto } from "services/backend/nswagts";
 
 type Props = {
@@ -13,14 +13,29 @@ type Props = {
 };
 const AppTableItem: FC<Props> = ({ application }) => {
   const { hoverBg } = useColors();
-  const { currApplication, setCurrApp } = useContext(AppViewContext);
-  const [isFavorite, setIsFavorite] = useState(false);
+  const { currApplication, setCurrApp, pushRecent, starredApps, pushStarred } = useContext(
+    AppViewContext
+  );
+  const [isFavorite, setIsFavorite] = useState(
+    starredApps.find(o => o == application.id) ? true : false
+  );
+  const { starredColor } = useColors();
   const router = useRouter();
+
+  const onFavoriteClick = useCallback(
+    event => {
+      pushStarred(application.id); // If it already exists in the starred array it is removed instead.
+      setIsFavorite(!isFavorite);
+      event.stopPropagation();
+    },
+    [isFavorite]
+  );
 
   return (
     <Tr
       onClick={() => {
         setCurrApp(application);
+        pushRecent(application.id);
         router.replace({
           pathname: "/ApplicationScreen",
           query: { id: application.id }
@@ -36,8 +51,8 @@ const AppTableItem: FC<Props> = ({ application }) => {
           <BsCheck
             visibility={currApplication && currApplication.id == application.id ? "" : "hidden"}
           />
-          <Box onClick={() => setIsFavorite(!isFavorite)} cursor={"pointer"}>
-            {isFavorite ? <BsStarFill color="yellow" /> : <BsStar />}
+          <Box onClick={event => onFavoriteClick(event)} zIndex={150} cursor={"pointer"}>
+            {isFavorite ? <BsStarFill color={starredColor} /> : <BsStar />}
           </Box>
         </HStack>
       </Td>

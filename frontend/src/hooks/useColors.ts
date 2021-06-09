@@ -11,6 +11,7 @@ export const useColors = () => {
   const serviceHeaderBg = useColorModeValue("orange.400", "orange.600");
   const overviewHeaderBg = useColorModeValue("blue.400", "blue.200");
   const appSecretBannerBg = useColorModeValue("red.400", "red.300");
+  const starredColor = useColorModeValue("F0F342", "white");
 
   return {
     hoverBg,
@@ -20,6 +21,7 @@ export const useColors = () => {
     appHeaderBg,
     serviceHeaderBg,
     overviewHeaderBg,
-    appSecretBannerBg
+    appSecretBannerBg,
+    starredColor
   };
 };

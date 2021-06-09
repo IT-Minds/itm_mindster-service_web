@@ -29,8 +29,9 @@ import CreateApplicationTriggerBtn from "./CreateApplicationTriggerBtn";
 
 const SelectAppTriggerBtn: FC = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const { currApplication } = useContext(AppViewContext);
+  const { currApplication, applications, starredApps, recentApps } = useContext(AppViewContext);
   const { t } = useLocales();
+
   return (
     <>
       <Button
@@ -51,7 +52,7 @@ const SelectAppTriggerBtn: FC = () => {
             <ModalHeader minWidth="max-content">
               {t("applicationScreen.modalHeaders.selectApp")}
             </ModalHeader>
-            <Spacer></Spacer>
+            <Spacer />
             <Box mr="20">
               <CreateApplicationTriggerBtn />
             </Box>
@@ -71,13 +72,19 @@ const SelectAppTriggerBtn: FC = () => {
 
               <TabPanels>
                 <TabPanel>
-                  <AppTable></AppTable>
+                  <AppTable
+                    applications={applications.filter(o =>
+                      recentApps.find(x => x == o.id)
+                    )}></AppTable>
                 </TabPanel>
                 <TabPanel>
-                  <p>Starred!</p>
+                  <AppTable
+                    applications={applications.filter(o =>
+                      starredApps.find(x => x == o.id)
+                    )}></AppTable>
                 </TabPanel>
                 <TabPanel>
-                  <AppTable></AppTable>
+                  <AppTable applications={applications} />
                 </TabPanel>
               </TabPanels>
             </Tabs>

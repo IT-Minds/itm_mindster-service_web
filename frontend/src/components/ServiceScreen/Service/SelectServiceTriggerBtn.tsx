@@ -29,7 +29,7 @@ import ServiceTable from "./ServiceTable";
 
 const SelectServiceTriggerBtn: FC = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const { currService } = useContext(ServiceViewContext);
+  const { currService, recentServices, starredServices, services } = useContext(ServiceViewContext);
   const { t } = useLocales();
 
   const selectString = t("serviceScreen.modalHeaders.selectService");
@@ -50,13 +50,12 @@ const SelectServiceTriggerBtn: FC = () => {
         <ModalContent>
           <Flex align="center" justify="center">
             <ModalHeader minWidth="max-content">{selectString}</ModalHeader>
-            <Spacer></Spacer>
+            <Spacer />
             <Box mr="20">
               <CreateServiceTriggerBtn />
             </Box>
             <ModalCloseButton />
           </Flex>
-
           <Divider />
           <ModalBody>
             <Tabs>
@@ -67,16 +66,19 @@ const SelectServiceTriggerBtn: FC = () => {
                 </Tab>
                 <Tab>{t("SelectorTabs.all")}</Tab>
               </TabList>
-
               <TabPanels>
                 <TabPanel>
-                  <ServiceTable />
+                  <ServiceTable
+                    services={services.filter(o => recentServices.find(x => x == o.id))}
+                  />
                 </TabPanel>
                 <TabPanel>
-                  <p>Starred!</p>
+                  <ServiceTable
+                    services={services.filter(o => starredServices.find(x => x == o.id))}
+                  />
                 </TabPanel>
                 <TabPanel>
-                  <ServiceTable />
+                  <ServiceTable services={services} />
                 </TabPanel>
               </TabPanels>
             </Tabs>

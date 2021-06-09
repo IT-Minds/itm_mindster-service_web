@@ -21,6 +21,10 @@ type ContextType = {
   fetchApps: () => Promise<void>;
   fetchServices: () => Promise<void>;
   fetchAppTokens: () => Promise<void>;
+  recentApps: number[];
+  starredApps: number[];
+  pushRecent: (id: number) => void;
+  pushStarred: (id: number) => void;
 };
 
 export const AppViewContext = createContext<ContextType>({
@@ -37,5 +41,9 @@ export const AppViewContext = createContext<ContextType>({
   fetchApps: null,
   fetchServices: null,
   fetchAppOwners: null,
-  fetchAppTokens: null
+  fetchAppTokens: null,
+  recentApps: [],
+  starredApps: [],
+  pushStarred: null,
+  pushRecent: null
 });

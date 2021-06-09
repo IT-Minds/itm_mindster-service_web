@@ -4,6 +4,7 @@ import ServiceHeader from "components/ServiceScreen/ServiceHeader";
 import ServiceInfo from "components/ServiceScreen/ServiceInfo";
 import { ServiceViewContext } from "contexts/ServiceViewContext";
 import { SignalRContext } from "contexts/SignalRContext";
+import { usePanelFilters } from "hooks/usePanelFilters";
 import { Locale } from "i18n/Locale";
 import { GetStaticProps, NextPage } from "next";
 import { useRouter } from "next/router";
@@ -31,6 +32,9 @@ const ServiceScreen: NextPage = () => {
   const [currService, setCurrService] = useState<IServiceIdDto>();
   const [currAction, setCurrAction] = useState<IActionIdDto>();
   const { query } = useRouter();
+  const { starred, recent, pushStarred, pushRecent } = usePanelFilters(
+    "Services" // Sets the prefix of where to save the recent and starred items
+  );
 
   const fetchPendingTokens = useCallback(async () => {
     try {
@@ -142,7 +146,11 @@ const ServiceScreen: NextPage = () => {
         fetchPendingTokens: fetchPendingTokens,
         fetchOwners: fetchServiceOwners,
         fetchServices: fetchServices,
-        fetchActionApprovers: fetchActionApprovers
+        fetchActionApprovers: fetchActionApprovers,
+        recentServices: recent,
+        starredServices: starred,
+        pushRecent: pushRecent,
+        pushStarred: pushStarred
       }}>
       <SignalRContext.Provider
         value={{

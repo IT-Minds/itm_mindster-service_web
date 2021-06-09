@@ -1,13 +1,16 @@
 import { Table, Tbody, Th, Thead, Tr } from "@chakra-ui/react";
-import { AppViewContext } from "contexts/AppViewContext";
 import { useLocales } from "hooks/useLocales";
-import { FC, useContext } from "react";
-import { ApplicationIdDto } from "services/backend/nswagts";
+import { FC } from "react";
+import { ApplicationIdDto, IApplicationIdDto } from "services/backend/nswagts";
 
 import AppTableItem from "./AppTableItem";
 
-const AppTable: FC = () => {
-  const { applications } = useContext(AppViewContext);
+type Props = {
+  applications: IApplicationIdDto[];
+};
+
+const AppTable: FC<Props> = ({ applications }) => {
+  // const { applications } = useContext(AppViewContext);
   const { t } = useLocales();
   return (
     <Table size="sm" variant="simple">
