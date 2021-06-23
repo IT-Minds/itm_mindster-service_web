@@ -34,7 +34,7 @@ namespace Application.UnitTests.AppTokenActions.Commands.Update
           }
         }
       };
-      var handler = new UpdateAppTokenActionsCommand.UpdateAppTokenActionsCommandHandler(Context, CurrentUserServiceMock.Object);
+      var handler = new UpdateAppTokenActionsCommand.UpdateAppTokenActionsCommandHandler(Context, CurrentUserServiceMock.Object, PendingTokensHubMock.Object);
       var result = await handler.Handle(command, CancellationToken.None);
 
       var entity = Context.AppTokens.Find(1);
@@ -74,7 +74,7 @@ namespace Application.UnitTests.AppTokenActions.Commands.Update
           }
         }
       };
-      var handler = new UpdateAppTokenActionsCommand.UpdateAppTokenActionsCommandHandler(Context, CurrentUserServiceMock.Object);
+      var handler = new UpdateAppTokenActionsCommand.UpdateAppTokenActionsCommandHandler(Context, CurrentUserServiceMock.Object, PendingTokensHubMock.Object);
       Func<Task> action = async () => await handler.Handle(command, CancellationToken.None);
       action.Should().Throw<NotFoundException>();
     }
@@ -103,7 +103,7 @@ namespace Application.UnitTests.AppTokenActions.Commands.Update
           }
         }
       };
-      var handler = new UpdateAppTokenActionsCommand.UpdateAppTokenActionsCommandHandler(Context, CurrentUserServiceMock.Object);
+      var handler = new UpdateAppTokenActionsCommand.UpdateAppTokenActionsCommandHandler(Context, CurrentUserServiceMock.Object, PendingTokensHubMock.Object);
       Func<Task> action = async () => await handler.Handle(command, CancellationToken.None);
       action.Should().Throw<NotFoundException>();
     }
@@ -126,7 +126,7 @@ namespace Application.UnitTests.AppTokenActions.Commands.Update
           }
         }
       };
-      var handler = new UpdateAppTokenActionsCommand.UpdateAppTokenActionsCommandHandler(Context, CurrentUserServiceMock.Object);
+      var handler = new UpdateAppTokenActionsCommand.UpdateAppTokenActionsCommandHandler(Context, CurrentUserServiceMock.Object, PendingTokensHubMock.Object);
       Func<Task> action = async () => await handler.Handle(command, CancellationToken.None);
       action.Should().Throw<NotFoundException>();
     }
@@ -156,7 +156,7 @@ namespace Application.UnitTests.AppTokenActions.Commands.Update
           }
         }
       };
-      var handler = new UpdateAppTokenActionsCommand.UpdateAppTokenActionsCommandHandler(Context, CurrentUserServiceMock.Object);
+      var handler = new UpdateAppTokenActionsCommand.UpdateAppTokenActionsCommandHandler(Context, CurrentUserServiceMock.Object, PendingTokensHubMock.Object);
       var result = await handler.Handle(command, CancellationToken.None);
 
       var entity = Context.AppTokens.Find(1);

@@ -7,8 +7,6 @@ import { genApplicationClient } from "services/backend/apiClients";
 import { AppTokenIdDto } from "services/backend/nswagts";
 import { logger } from "utils/logger";
 
-import PendingList from "../../components/PendingApprovals/PendingList";
-
 const PendingApprovalPage: NextPage = () => {
   const [appTokens, setAppTokens] = useState<AppTokenIdDto[]>([]);
   const [currToken, setCurrToken] = useState<AppTokenIdDto>();
@@ -42,7 +40,7 @@ const PendingApprovalPage: NextPage = () => {
         fetchServices: null,
         fetchAppTokens: fetchAppTokens
       }}>
-      <PendingList />
+      {/* <PendingList /> */}
     </ApplicationContext.Provider>
   );
 };

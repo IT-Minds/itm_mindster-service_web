@@ -10,31 +10,25 @@ import {
   ModalOverlay,
   useDisclosure
 } from "@chakra-ui/react";
-import ReviewTokenForm from "components/Forms/ReviewAcces/ReviewTokenForm";
-import React, { FC } from "react";
-import { AppTokenIdDto } from "services/backend/nswagts";
-
-type Props = {
-  token: AppTokenIdDto;
-};
-
-const ReviewTokenModalTrigger: FC<Props> = ({ token }) => {
+import NotificationBellWithCounter from "components/Common/NotificationBellWithCounter";
+import PendingList from "components/ServiceScreen/PendingApprovals/PendingList";
+import { ServiceViewContext } from "contexts/ServiceViewContext";
+import React, { FC, useContext } from "react";
+const NotificationTriggerBtn: FC = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const { pendingTokens } = useContext(ServiceViewContext);
 
   return (
     <>
-      <Button colorScheme="blue" onClick={onOpen}>
-        Review Token
-      </Button>
-
+      <NotificationBellWithCounter counter={pendingTokens.length} submitOnClick={onOpen} />
       <Modal isOpen={isOpen} onClose={onClose} scrollBehavior="inside" size="4xl">
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Approve or decline actions for token: {token.tokenIdentifier} </ModalHeader>
+          <ModalHeader>Pending actions </ModalHeader>
           <ModalCloseButton />
           <Divider />
           <ModalBody>
-            <ReviewTokenForm token={token} />
+            <PendingList />
           </ModalBody>
           <Divider />
           <ModalFooter>
@@ -47,5 +41,4 @@ const ReviewTokenModalTrigger: FC<Props> = ({ token }) => {
     </>
   );
 };
-
-export default ReviewTokenModalTrigger;
+export default NotificationTriggerBtn;

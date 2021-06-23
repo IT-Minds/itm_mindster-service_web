@@ -11,10 +11,11 @@ namespace Application.AppTokens.Commands.CreateAppToken
       RuleFor(e => e.AppToken)
         .NotEmpty();
       RuleFor(e => e.AppToken.Description)
-        .MaximumLength(200);
+        .MaximumLength(2000)
+        .NotEmpty();
       RuleFor(e => e.AppToken.TokenIdentifier)
         .MaximumLength(200)
-        .Matches("[a-z_]+");
+        .Matches("^[a-z_]*$");
     }
   }
 }

@@ -9,25 +9,25 @@ import {
 
 type ContextType = {
   services: IServiceIdDto[];
-  appTokens: IAppTokenIdDto[];
   serviceOwners: IServiceOwnerIdDto[];
   approvers: IActionApproverIdDto[];
   currService: IServiceIdDto;
   currAction: IActionIdDto;
+  pendingTokens: IAppTokenIdDto[];
   setCurrService: Dispatch<SetStateAction<IServiceIdDto>>;
   setNewCurrService: (serviceId: number) => Promise<void>;
   setCurrAction: Dispatch<SetStateAction<IActionIdDto>>;
   fetchServices: () => Promise<void>;
   fetchOwners: () => Promise<void>;
-  fetchAppTokens: () => Promise<void>;
   fetchActionApprovers: () => Promise<void>;
+  fetchPendingTokens: () => Promise<void>;
 };
 
 export const ServiceViewContext = createContext<ContextType>({
   services: [],
-  appTokens: [],
   serviceOwners: [],
   approvers: [],
+  pendingTokens: [],
   currService: null,
   currAction: null,
   setCurrService: null,
@@ -35,6 +35,6 @@ export const ServiceViewContext = createContext<ContextType>({
   setCurrAction: null,
   fetchServices: null,
   fetchOwners: null,
-  fetchAppTokens: null,
-  fetchActionApprovers: null
+  fetchActionApprovers: null,
+  fetchPendingTokens: null
 });

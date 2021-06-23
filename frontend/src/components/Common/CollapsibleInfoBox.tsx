@@ -5,13 +5,17 @@ type Props = {
 };
 const CollapsibleInfoBox: FC<Props> = ({ text }) => {
   const [show, setShow] = useState(false);
+
+  if (text.length < 150) {
+    return <Text>{text}</Text>;
+  }
   return (
     <Box>
-      <Collapse startingHeight={80} in={show}>
-        <Text fontSize="lg">{text}</Text>
+      <Collapse startingHeight={70} in={show}>
+        <Text fontSize="md">{text}</Text>
       </Collapse>
       <Center>
-        <Button size="sm" onClick={() => setShow(!show)} mt="1rem">
+        <Button colorScheme="gray" size="sm" onClick={() => setShow(!show)} mt="1rem">
           Show {show ? "Less" : "More"}
         </Button>
       </Center>

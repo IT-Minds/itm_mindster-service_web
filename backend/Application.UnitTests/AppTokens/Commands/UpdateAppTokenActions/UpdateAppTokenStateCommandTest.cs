@@ -23,7 +23,7 @@ namespace Application.UnitTests.AppTokens.Commands.UpdateAppTokenActions
         Id = 1,
         NewState = TokenStates.JwtReceived
       };
-      var handler = new UpdateAppTokenStateCommand.UpdateAppTokenStateCommandHandler(Context, CurrentUserServiceMock.Object);
+      var handler = new UpdateAppTokenStateCommand.UpdateAppTokenStateCommandHandler(Context, CurrentUserServiceMock.Object, PendingTokensHubMock.Object);
 
       await handler.Handle(command, CancellationToken.None);
 
@@ -40,7 +40,7 @@ namespace Application.UnitTests.AppTokens.Commands.UpdateAppTokenActions
         Id = 1,
         NewState = TokenStates.JwtReceived
       };
-      var handler = new UpdateAppTokenStateCommand.UpdateAppTokenStateCommandHandler(Context, InvalidUserServiceMock.Object);
+      var handler = new UpdateAppTokenStateCommand.UpdateAppTokenStateCommandHandler(Context, InvalidUserServiceMock.Object, PendingTokensHubMock.Object);
       Func<Task> action = async () => await handler.Handle(command, CancellationToken.None);
 
       action.Should().Throw<ForbiddenAccessException>();
@@ -53,7 +53,7 @@ namespace Application.UnitTests.AppTokens.Commands.UpdateAppTokenActions
         Id = 99,
         NewState = TokenStates.JwtReceived
       };
-      var handler = new UpdateAppTokenStateCommand.UpdateAppTokenStateCommandHandler(Context, CurrentUserServiceMock.Object);
+      var handler = new UpdateAppTokenStateCommand.UpdateAppTokenStateCommandHandler(Context, CurrentUserServiceMock.Object, PendingTokensHubMock.Object);
       Func<Task> action = async () => await handler.Handle(command, CancellationToken.None);
 
       action.Should().Throw<NotFoundException>();

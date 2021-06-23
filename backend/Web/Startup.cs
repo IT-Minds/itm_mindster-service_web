@@ -134,6 +134,7 @@ namespace Web
       services.AddScoped<ITokenService, TokenService>();
       services.AddScoped<IAuthorizationService, AuthorizationService>();
       services.AddScoped<IExampleHubService, ExampleHubService>();
+      services.AddScoped<IPendingTokenHub, PendingTokenHubService>();
       services.AddSignalR();
     }
 
@@ -175,6 +176,7 @@ namespace Web
                   pattern: "{controller}/{action=Index}/{id?}");
 
         endpoints.MapHub<ExampleHub>("/examplehub");
+        endpoints.MapHub<PendingTokenHub>("/pendingTokensHub");
       });
     }
   }

@@ -3,6 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Application.Common.Exceptions;
 using Application.Common.Interfaces;
+using Application.Common.Interfaces.Hubs;
 using Application.Common.Security;
 using Domain.Entities;
 using Domain.Enums;
@@ -23,11 +24,13 @@ namespace Application.AppTokens.Commands.UpdateAppTokenActions
     {
       private readonly IApplicationDbContext _context;
       private readonly ICurrentUserService _currentUserService;
+      private readonly IPendingTokenHub _pendingTokenHub;
 
-      public UpdateAppTokenStateCommandHandler(IApplicationDbContext context, ICurrentUserService currentUserService)
+      public UpdateAppTokenStateCommandHandler(IApplicationDbContext context, ICurrentUserService currentUserService, IPendingTokenHub pendingTokenHub)
       {
         _context = context;
         _currentUserService = currentUserService;
+        _pendingTokenHub = pendingTokenHub;
       }
 
       public async Task<Unit> Handle(UpdateAppTokenStateCommand request, CancellationToken cancellationToken)
@@ -41,6 +44,8 @@ namespace Application.AppTokens.Commands.UpdateAppTokenActions
         appToken.State = request.NewState;
         _context.AppTokens.Update(appToken);
         await _context.SaveChangesAsync(cancellationToken);
+
+        await _pendingTokenHub.SendMessage(_currentUserService.UserEmail, "Token Requested for Review");
 
         return Unit.Value;
       }
